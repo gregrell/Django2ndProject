@@ -23,11 +23,9 @@ urlpatterns = [
     path('', include('postitApp.urls')),
     *static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT),
 
-
 ]
 
-print(urlpatterns)
 
-#urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+# urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
-#print(urlpatterns)
+# print(urlpatterns)

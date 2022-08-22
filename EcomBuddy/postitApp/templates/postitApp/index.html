@@ -16,6 +16,7 @@
 <div>
     {% for post in user_posts %}
     <p>{{post.caption}}</p>
+    <a href="{% url 'delete-post' post.id %}">delete</a>
     <br>
 
     {% if post.image %}

@@ -32,3 +32,14 @@ def new_post_submit(request):
             print('no save')
 
     return redirect('index')
+
+
+def delete_post(request, pk):
+    try:
+        record = UserPost.objects.get(id=pk)
+        record.delete()
+    except:
+        print('record does not exist')
+
+    return redirect('index')
+

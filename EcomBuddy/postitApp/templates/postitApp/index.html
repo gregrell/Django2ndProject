@@ -15,10 +15,14 @@
 
 <div>
     {% for post in user_posts %}
-    {{post.caption}}
+    <p>{{post.caption}}</p>
+    <br>
 
     {% if post.image %}
-    <img src={{post.image.url}}>
+   <!-- <video width="500px" height="500px" controls>
+     <source src="{{ post.video_file.url }}" type="video/mp4">
+    </video>-->
+    <img width="500px" height="500px" src={{post.image.url}}>
     <p>Serving path: {{post.image.url}}</p>
     {% endif %}
     <br>

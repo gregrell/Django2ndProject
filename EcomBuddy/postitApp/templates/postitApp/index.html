@@ -5,6 +5,9 @@
     <title>PostIt!</title>
 </head>
 <body>
+
+{% load static %}
+
 <div>
     <h1>Index Page</h1>
     {% lorem 1 p%}
@@ -13,6 +16,11 @@
 <div>
     {% for post in user_posts %}
     {{post.caption}}
+
+    {% if post.image %}
+    <img src={{post.image.url}}>
+    <p>Serving path: {{post.image.url}}</p>
+    {% endif %}
     <br>
     {% endfor %}
 </div>

@@ -4,5 +4,5 @@ from .models import UserPost
 class PostForm(ModelForm):
     class Meta:
         model = UserPost
-        fields = ['caption']
+        fields = ['caption', 'image']
 

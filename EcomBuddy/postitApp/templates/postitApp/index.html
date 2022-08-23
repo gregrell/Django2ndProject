@@ -26,6 +26,16 @@
     <img width="500px" height="500px" src={{post.image.url}}>
     <p>Serving path: {{post.image.url}}</p>
     {% endif %}
+
+    {% if post.video %}
+    <video width="400" height="400" muted="muted" controls="controls" preload="none">
+        <source src="{{ post.video.url }}" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+    {% endif %}
+
+
+
     <br>
     {% endfor %}
 </div>

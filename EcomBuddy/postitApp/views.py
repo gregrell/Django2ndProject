@@ -37,6 +37,8 @@ def new_post_submit(request):
 def delete_post(request, pk):
     try:
         record = UserPost.objects.get(id=pk)
+        record.image.delete() # This deletes the actual file stored at the path of record.image
+        record.video.delete() # This deletes the actual file stored at the path of record.video
         record.delete()
     except:
         print('record does not exist')

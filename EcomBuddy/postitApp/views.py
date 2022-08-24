@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect
+from django.forms import formset_factory
 
 from .models import UserPost
-from .forms import PostForm
+from .forms import PostForm, ImageForm
 
 
 # Create your views here.
@@ -15,7 +16,8 @@ def index(request):
 
 def new_post(request):
     form = PostForm
-    context = {'form': form}
+    imageform = ImageForm
+    context = {'form': form, 'imageform': imageform}
     return render(request, 'postitApp/new_post.html', context)
 
 
@@ -37,8 +39,8 @@ def new_post_submit(request):
 def delete_post(request, pk):
     try:
         record = UserPost.objects.get(id=pk)
-        record.image.delete() # This deletes the actual file stored at the path of record.image
-        record.video.delete() # This deletes the actual file stored at the path of record.video
+        # record.image.delete() # This deletes the actual file stored at the path of record.image
+        # record.video.delete() # This deletes the actual file stored at the path of record.video
         record.delete()
     except:
         print('record does not exist')

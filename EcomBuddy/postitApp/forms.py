@@ -8,13 +8,15 @@ class PostForm(ModelForm):
     images = forms.FileField(label='Images',
                              required=False,
                              error_messages={'invalid': "Image files only"},
-                             widget=forms.FileInput(attrs={'multiple': True})
+                             widget=forms.FileInput(attrs={'multiple': True, 'accept': 'image/*'})
                              )
 
     class Meta:
         model = UserPost
         fields = ['caption', 'images']
-        # widgets = {"files": forms.FileInput(attrs={'id': 'files', 'required': True, 'multiple': True})}
+        widgets = {
+            "caption": forms.TextInput(attrs={'autocomplete': 'off'})
+        }
 
 
 

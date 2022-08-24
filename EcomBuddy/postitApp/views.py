@@ -26,9 +26,12 @@ def new_post_submit(request):
         user = request.user
         caption = request.POST.get('caption')
         form = PostForm(request.POST, request.FILES)
+
         if form.is_valid():
+            for img in request.FILES.getlist('images'):
+                # TODO "File Validator"
+                pass
             form.save()
-            print('save')
 
         else:
             print('no save')

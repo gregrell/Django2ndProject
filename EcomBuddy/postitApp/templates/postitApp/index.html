@@ -15,17 +15,22 @@
 
 <div>
     {% for post in user_posts %}
-    <p>{{post.caption}}</p>
+    <h1>{{post.caption}}</h1>
     <a href="{% url 'delete-post' post.id %}">delete</a>
     <br>
+<!--    <p>{{ post.userimage_set.all }}</p>-->
 
-    {% if post.image %}
-   <!-- <video width="500px" height="500px" controls>
-     <source src="{{ post.video_file.url }}" type="video/mp4">
-    </video>-->
-    <img width="500px" height="500px" src={{post.image.url}}>
-    <p>Serving path: {{post.image.url}}</p>
-    {% endif %}
+    {% for userimage in post.userimage_set.all %}
+<!--        <p>{{ userimage.image }}</p>-->
+
+
+    <!-- <video width="500px" height="500px" controls>
+      <source src="{{ post.video_file.url }}" type="video/mp4">
+     </video>-->
+    <img width="500px" height="500px" src={{userimage.image.url}}>
+<!--    <p>Serving path: {{userimage.image.url}}</p>-->
+
+    {% endfor %}
 
     {% if post.video %}
     <video width="400" height="400" muted="muted" controls="controls" preload="none">
@@ -33,7 +38,6 @@
         Your browser does not support the video tag.
     </video>
     {% endif %}
-
 
 
     <br>

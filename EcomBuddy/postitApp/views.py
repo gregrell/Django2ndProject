@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.forms import formset_factory
 
-from .models import UserPost
+from .models import UserPost, UserImage
 from .forms import PostForm, ImageForm
 
 
@@ -28,10 +28,15 @@ def new_post_submit(request):
         form = PostForm(request.POST, request.FILES)
 
         if form.is_valid():
+            just_posted = form.save()
             for img in request.FILES.getlist('images'):
                 # TODO "File Validator"
+                image = UserImage.objects.create(
+                    post=just_posted,
+                    image=img,
+                )
+
                 pass
-            form.save()
 
         else:
             print('no save')

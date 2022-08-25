@@ -3,46 +3,72 @@
 <head>
     <meta charset="UTF-8">
     <title>PostIt!</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa"
+            crossorigin="anonymous"></script>
+
 </head>
 <body>
 
 {% load static %}
 
 <div>
-    <h1>Index Page</h1>
+    <h1>Post It!</h1>
     {% lorem 1 p%}
 </div>
-
+<!--
 <div>
     {% for post in user_posts %}
-    <h1>{{post.caption}}</h1>
-    <a href="{% url 'delete-post' post.id %}">delete</a>
-    <br>
-<!--    <p>{{ post.userimage_set.all }}</p>-->
+        <h1>{{post.caption}}</h1>
+        <a href="{% url 'delete-post' post.id %}">delete</a>
+        <br>
+        &lt;!&ndash;    <p>{{ post.userimage_set.all }}</p>&ndash;&gt;
 
-    {% for userimage in post.userimage_set.all %}
-<!--        <p>{{ userimage.image }}</p>-->
+        {% for userimage in post.userimage_set.all %}
+        <img width="500px" height="500px" src={{userimage.image.url}}>
 
-
-    <!-- <video width="500px" height="500px" controls>
-      <source src="{{ post.video_file.url }}" type="video/mp4">
-     </video>-->
-    <img width="500px" height="500px" src={{userimage.image.url}}>
-<!--    <p>Serving path: {{userimage.image.url}}</p>-->
-
-    {% endfor %}
-
-    {% if post.video %}
-    <video width="400" height="400" muted="muted" controls="controls" preload="none">
-        <source src="{{ post.video.url }}" type="video/mp4">
-        Your browser does not support the video tag.
-    </video>
-    {% endif %}
-
-
-    <br>
+        {% endfor %}
     {% endfor %}
 </div>
+-->
+<br>
+
+
+{% for post in user_posts %}
+<p>{{post.id}}</p>
+
+<div style="width: 40%">
+    <div id="carousel{{post.id}}" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner">
+            {% for userimage in post.userimage_set.all %}
+            {% if forloop.first %}
+            <div class="carousel-item active">
+                <img src="{{userimage.image.url}}" class="d-block w-100" alt="...">
+            </div>
+            {% else %}
+            <div class="carousel-item">
+                <img src="{{userimage.image.url}}" class="d-block w-100" alt="...">
+            </div>
+            {% endif %}
+            {% endfor %}
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carousel{{post.id}}" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carousel{{post.id}}" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div>
+</div>
+
+{% endfor %}
+
+
 <br>
 <div>
     <a href="{% url 'create_post' %}">Create Post</a>

@@ -1,5 +1,4 @@
 from django.forms import Form, ModelForm
-from django.db import models
 from .models import UserPost, UserImage, UserVideo
 from django import forms
 
@@ -18,13 +17,6 @@ class PostForm(ModelForm):
             "caption": forms.TextInput(attrs={'autocomplete': 'off'})
         }
 
-
-
-
-class ImageForm(ModelForm):
-    class Meta:
-        model = UserImage
-        fields = ['image']
 
 
 class VideoForm(ModelForm):

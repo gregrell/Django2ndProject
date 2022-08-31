@@ -1,8 +1,11 @@
 from django.shortcuts import render, redirect
-from django.forms import formset_factory
-
 from .models import UserPost, UserImage
-from .forms import PostForm, ImageForm
+from .forms import PostForm
+
+# Here we begin using class based views:
+from django.views.generic import ListView
+from django.views.generic.edit import CreateView, DeleteView
+
 
 
 # Create your views here.
@@ -16,8 +19,7 @@ def index(request):
 
 def new_post(request):
     form = PostForm
-    imageform = ImageForm
-    context = {'form': form, 'imageform': imageform}
+    context = {'form': form}
     return render(request, 'postitApp/new_post.html', context)
 
 
@@ -54,4 +56,25 @@ def delete_post(request, pk):
         print('record does not exist')
 
     return redirect('index')
+
+
+# Class based views:
+
+class indexView(ListView):
+    #model = UserPost
+    queryset = UserPost.objects.order_by('-publish_date')
+    context_object_name = 'user_posts'
+    template_name = 'postitApp/index.html'
+
+class newPost(CreateView):
+    template_name = 'postitApp/new_post.html'
+    # model = UserPost
+    form_class = PostForm
+    # fields = ['caption']
+
+
+class deletePost(DeleteView):
+    model = UserPost
+    success_url = '/'
+    template_name = 'postitApp/delete_object.html'
 

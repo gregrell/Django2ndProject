@@ -4,24 +4,6 @@
 {% block content %}
 
 <style>
-    .index-container{
-        display:grid;
-        grid-template-columns: 1fr 3fr 1fr;
-    }
-
-    .middle-section{
-        display: table-column-group;
-        justify-content: center;
-    }
-
-    body {
-    padding-top: 65px;
-}
-
-
-
-
-
 
 </style>
 
@@ -31,61 +13,66 @@
 {% load static %}
 
 
-<div class="index-container">
-    <div class="container">
-        {% lorem 1 %}
-        {% include 'postitApp/footer.html' %}
-    </div>
-    <div class="container">
-        {% for post in user_posts %}
-        <h3>{{post.caption}}</h3>
-        <a href="{% url 'delete-post' post.id %}">delete</a>
-        <br>
-
-        {% if post.userimage_set.all.count > 1%}
-        <div style="width: 40%">
-            <div id="carousel{{post.id}}" class="carousel slide" data-bs-ride="carousel">
-                <div class="carousel-inner">
-                    {% for userimage in post.userimage_set.all %}
-                    {% if forloop.first %}
-                    <div class="carousel-item active">
-                        <img src="{{userimage.image.url}}" class="d-block w-100" alt="...">
-                    </div>
-                    {% else %}
-                    <div class="carousel-item">
-                        <img src="{{userimage.image.url}}" class="d-block w-100" alt="...">
-                    </div>
-                    {% endif %}
-                    {% endfor %}
-                </div>
-                <button class="carousel-control-prev" type="button" data-bs-target="#carousel{{post.id}}"
-                        data-bs-slide="prev">
-                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Previous</span>
-                </button>
-                <button class="carousel-control-next" type="button" data-bs-target="#carousel{{post.id}}"
-                        data-bs-slide="next">
-                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Next</span>
-                </button>
+<div class="container">
+    <div class="row content">
+        <div class="col-3">
+            <div class="text-center">
+                {% lorem 1 %}
+            </div>
+            <div class="text-left">
+                {% include 'postitApp/footer.html' %}
             </div>
         </div>
-        {% else %}
-        {% for userimage in post.userimage_set.all|slice:1 %}
-        <img width="500px" height="500px" src={{userimage.image.url}}>
-        {%endfor%}
-        {% endif %}
+        <div class="col-sm-6 text-left">
+            {% for post in user_posts %}
+            <h3>{{post.caption}}</h3>
+            <a href="{% url 'delete-post' post.id %}">delete</a>
+            <br>
+            {% if post.userimage_set.all.count > 1%}
+            <div style="">
+                <div id="carousel{{post.id}}" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-inner">
+                        {% for userimage in post.userimage_set.all %}
+                        {% if forloop.first %}
+                        <div class="carousel-item active">
+                            <img src="{{userimage.image.url}}" class="d-block w-100" alt="...">
+                        </div>
+                        {% else %}
+                        <div class="carousel-item">
+                            <img src="{{userimage.image.url}}" class="d-block w-100" alt="...">
+                        </div>
+                        {% endif %}
+                        {% endfor %}
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#carousel{{post.id}}"
+                            data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#carousel{{post.id}}"
+                            data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+            </div>
+            {% else %}
+            {% for userimage in post.userimage_set.all|slice:1 %}
+            <img width="500px" height="500px" src={{userimage.image.url}}>
+            {%endfor%}
+            {% endif %}
 
-        {% endfor %}
+            {% endfor %}
 
 
-        <br>
-        <div>
-            <a href="{% url 'create_post' %}">Create Post</a>
+            <br>
+            <div>
+                <a href="{% url 'create_post' %}">Create Post</a>
+            </div>
         </div>
-    </div>
-    <div class="container">
-        {%lorem 2%}
+        <div class="col-3 text-center">
+            {%lorem 4%}
+        </div>
     </div>
 </div>
 

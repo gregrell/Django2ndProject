@@ -78,3 +78,5 @@ class deletePost(DeleteView):
     success_url = '/'
     template_name = 'postitApp/delete_object.html'
 
+def aboutPage(request):
+    return render(request,'postitApp/about.html', context={})

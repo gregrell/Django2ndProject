@@ -2,11 +2,20 @@
 {% block start %}
 <style>
     .padleft{
-        padding-left: 10px;
+        padding-left: 1px;
+    }
+
+    .small-footer-text{
+        font-size: 0.7rem;
+        text-decoration: none;
+
     }
 </style>
 
-<div class="text-black-70 text-left text-muted padleft" >
+<div class="text-black-70 text-center text-muted padleft" >
+    <a href="#" class="small-footer-text text-muted">Contact •</a>
+    <a href="{% url 'about'%}" class="small-footer-text text-muted">About •</a>
+    <a href="#" class="small-footer-text text-muted">Privacy</a>
     <label><small>© FinePosts 2022</small></label>
 </div>
 {% endblock %}

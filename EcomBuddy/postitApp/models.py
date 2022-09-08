@@ -3,11 +3,11 @@ from django.contrib.auth.models import User, AbstractUser
 
 
 # Create your models here.
-
-class CustomUser(AbstractUser):
-
-    def __str__(self):
-        return self.username
+#
+# class CustomUser(AbstractUser):
+#
+#     def __str__(self):
+#         return self.username
 
 
 class UserPost(models.Model):

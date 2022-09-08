@@ -1,5 +1,6 @@
 from django.forms import Form, ModelForm
-from .models import UserPost, UserImage, UserVideo
+from .models import UserPost, UserImage, UserVideo, CustomUser
+from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django import forms
 
 
@@ -24,3 +25,17 @@ class VideoForm(ModelForm):
         model = UserVideo
         fields = ['video']
 
+
+class CustomUserCreationForm(UserCreationForm):
+
+    class Meta:
+        model = CustomUser
+        fields = ("email",)
+
+class CustomUserChangeForm(UserChangeForm):
+
+    class Meta:
+        model = CustomUser
+        fields = (
+            "email",
+        )

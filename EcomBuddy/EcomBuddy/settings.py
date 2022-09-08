@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     'postitApp.apps.PostitappConfig',
 ]
 
+AUTH_USER_MODEL = 'postitApp.CustomUser'
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -72,6 +74,9 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'EcomBuddy.wsgi.application'
+
+LOGIN_REDIRECT_URL = 'landing-page'
+LOGOUT_REDIRECT_URL = 'landing-page'
 
 
 # Database

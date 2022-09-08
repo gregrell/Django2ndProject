@@ -80,3 +80,16 @@ class deletePost(DeleteView):
 
 def aboutPage(request):
     return render(request,'postitApp/about.html', context={})
+
+
+def landingPage(request):
+    return render(request,'postitApp/registration/landing_page.html', context={})
+
+
+def login(request):
+    return render(request,'postitApp/registration/login.html', context={})
+
+
+def signup(request):
+    return render(request,'postitApp/registration/signup.html', context={})
+

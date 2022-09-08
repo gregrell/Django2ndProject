@@ -6,8 +6,10 @@ from .views import indexView
 urlpatterns = [
     #path('', views.index, name='index'),
     path('', indexView.as_view(), name='index'),
+    path('landing/', views.landingPage, name='landing-page'),
     path('about/', views.aboutPage, name='about'),
-    #path('new_post/', views.new_post, name='create_post'),
+    path('login/', views.login, name='login'),
+    path('signup/', views.signup, name='signup'),
     path('new_post/',views.newPost.as_view(), name='create_post'),
     path('new_post_submit/', views.new_post_submit, name='new-post-submit'),
     # path('delete_post <str:pk> /', views.delete_post, name='delete-post')

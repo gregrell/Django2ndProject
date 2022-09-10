@@ -5,7 +5,6 @@ from django.contrib.auth.models import User, AbstractUser
 # Create your models here.
 
 class CustomUser(AbstractUser):
-    #name = models.CharField(max_length=200, null=True)
     email = models.EmailField(unique=True, null=True)
     bio = models.TextField(null=True)
     avatar = models.ImageField(null=True, default="avatar.svg")
@@ -13,7 +12,6 @@ class CustomUser(AbstractUser):
 
     def __str__(self):
         return self.username
-    #USERNAME_FIELD = 'email'
 
 
 class UserPost(models.Model):

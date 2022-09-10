@@ -5,7 +5,7 @@ from .forms import PostForm
 # Here we begin using class based views:
 from django.views.generic import ListView
 from django.views.generic.edit import CreateView, DeleteView
-
+from django.contrib.auth import login, logout, authenticate
 
 
 # Create your views here.
@@ -61,10 +61,11 @@ def delete_post(request, pk):
 # Class based views:
 
 class indexView(ListView):
-    #model = UserPost
+    # model = UserPost
     queryset = UserPost.objects.order_by('-publish_date')
     context_object_name = 'user_posts'
     template_name = 'postitApp/index.html'
+
 
 class newPost(CreateView):
     template_name = 'postitApp/new_post.html'
@@ -78,18 +79,29 @@ class deletePost(DeleteView):
     success_url = '/'
     template_name = 'postitApp/delete_object.html'
 
+
 def aboutPage(request):
-    return render(request,'postitApp/about.html', context={})
+    return render(request, 'postitApp/about.html', context={})
 
 
 def landingPage(request):
-    return render(request,'postitApp/registration/landing_page.html', context={})
+    return render(request, 'postitApp/registration/landing_page.html', context={})
 
 
-def login(request):
-    return render(request,'postitApp/registration/login.html', context={})
+def loginUser(request):
+    if request.method == 'POST':
+        username = request.POST.get('email')
+        password = request.POST.get('password')
+
+
+
+    return render(request, 'postitApp/registration/login.html', context={})
 
 
 def signup(request):
-    return render(request,'postitApp/registration/signup.html', context={})
+    return render(request, 'postitApp/registration/signup.html', context={})
 
+
+def logoutUser(request):
+    logout(request)
+    return redirect('index')

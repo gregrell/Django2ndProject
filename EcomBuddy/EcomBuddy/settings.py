@@ -43,6 +43,9 @@ INSTALLED_APPS = [
 
 AUTH_USER_MODEL = 'postitApp.CustomUser'
 
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',

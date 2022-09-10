@@ -6,7 +6,26 @@
 <div class="container-fluid fs-6" style="max-width: 1200px;">
     <div class="row content">
         <div class="col-sm-2">
+            {% if user.is_authenticated %}
+            <h1>You are logged in</h1>
+            <small>{{user.username}}</small>
+            <a href="{% url 'logout'%}">logout</a>
+
+            {% else %}
+            <h1>You are not logged in</h1>
+            <form METHOD="POST" action="">
+                {% csrf_token %}
+                <label>Email</label>
+                <input type="text" name="email" placeholder="enter email address">
+                <label>Password</label>
+                <input type="password" name="password" placeholder="&bull;">
+                <input type="submit" value="Login">
+
+            </form>
+
             <a href="{% url 'signup'%}">Sign Up</a>
+
+            {% endif %}
         </div>
         <div class="col-sm-5">
         </div>

@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from .models import UserPost, UserImage
-from .forms import PostForm
+from .models import UserPost, UserImage, CustomUser
+from .forms import PostForm, CustomUserCreationForm
 
 # Here we begin using class based views:
 from django.views.generic import ListView
@@ -91,22 +91,43 @@ def landingPage(request):
 
 def loginUser(request):
     if request.method == 'POST':
-        username = request.POST.get('email')
+        email = request.POST.get('email')
         password = request.POST.get('password')
-        user = authenticate(username=username,password=password)
+        try:
+            username = CustomUser.objects.get(email=email.lower()).username
+            user = authenticate(username=username, password=password)
+        except:
+            user = None
         if user is not None:
             login(request, user)
             return redirect('index')
         else:
             messages.error(request, "User or Password not found")
 
-
-
     return render(request, 'postitApp/registration/login.html', context={})
 
 
 def signup(request):
-    return render(request, 'postitApp/registration/signup.html', context={})
+    form = CustomUserCreationForm()
+    if request.method == 'POST':
+        form = CustomUserCreationForm(request.POST)
+        if form.is_valid():
+            email = request.POST.get('email')
+            password = request.POST.get('password')
+            username = email
+            user = form.save(commit=False)
+            user.username = email.lower()
+            try:
+                user.save()
+                login(request, user)
+                return redirect('index')
+            except:
+                messages.error(request, "Could not save user")
+
+    else:
+        messages.error(request, "Could not register user")
+
+    return render(request, 'postitApp/registration/signup.html', context={'form': form})
 
 
 def logoutUser(request):

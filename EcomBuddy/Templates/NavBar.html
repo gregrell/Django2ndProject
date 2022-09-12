@@ -46,7 +46,12 @@
             </form>
             <ul class="navbar-nav">
                 <li class="nav-item">
+                    {% if request.user.is_authenticated %}
+                    <small class="nav-link" style="font-size: 0.9rem; padding-bottom: 0px; margin: 0px;">{{request.user.username}}</small>
+                    <a class="nav-link" href="{% url 'logout' %}" style="font-size: 0.9rem; padding-top: 0px;">Logout</a>
+                    {% else %}
                     <a class="nav-link" href="{% url 'login' %}">Login</a>
+                    {% endif %}
                 </li>
             </ul>
 

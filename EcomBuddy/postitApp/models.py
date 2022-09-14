@@ -4,6 +4,12 @@ from django.contrib.auth.models import AbstractUser
 
 # Create your models here.
 
+
+# Define function to save to the user folder. Taken from Django user documentation
+def user_directory_path(instance, filename):
+    return 'user_{0}/{1}'.format(instance.post.created_by.id, filename)
+
+
 class CustomUser(AbstractUser):
     email = models.EmailField(unique=True, null=True)
     bio = models.TextField(null=True)
@@ -25,7 +31,7 @@ class UserPost(models.Model):
 
 class UserImage(models.Model):
     post = models.ForeignKey(UserPost, on_delete=models.CASCADE)
-    image = models.ImageField(null=True, blank=True)
+    image = models.ImageField(upload_to=user_directory_path, null=True, blank=True)
 
 
 class UserVideo(models.Model):

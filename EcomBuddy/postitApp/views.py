@@ -31,7 +31,9 @@ def new_post_submit(request):
         form = PostForm(request.POST, request.FILES)
 
         if form.is_valid():
-            just_posted = form.save()
+            form.instance.created_by = request.user
+            just_posted = form.save(commit=True)
+
             for img in request.FILES.getlist('images'):
                 # TODO "File Validator"
                 image = UserImage.objects.create(

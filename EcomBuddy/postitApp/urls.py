@@ -10,6 +10,7 @@ urlpatterns = [
     path('about/', views.aboutPage, name='about'),
     path('login/', views.loginUser, name='login'),
     path('signup/', views.signup, name='signup'),
+    path('edit_user/', views.editUser, name='edit-user'),
     path('logout/', views.logoutUser, name='logout'),
     path('new_post/', views.newPost.as_view(), name='create_post'),
     path('new_post_submit/', views.new_post_submit, name='new-post-submit'),

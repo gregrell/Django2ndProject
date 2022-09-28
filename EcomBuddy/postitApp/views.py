@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from .models import UserPost, UserImage, CustomUser
-from .forms import PostForm, CustomUserCreationForm
+from .forms import PostForm, CustomUserCreationForm, CustomUserChangeForm
 
 # Here we begin using class based views:
 from django.views.generic import ListView
@@ -115,8 +115,6 @@ def signup(request):
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
             email = request.POST.get('email')
-            password = request.POST.get('password')
-            username = email
             user = form.save(commit=False)
             user.username = email.lower()
             try:
@@ -130,6 +128,10 @@ def signup(request):
         messages.error(request, "Could not register user")
 
     return render(request, 'postitApp/registration/signup.html', context={'form': form})
+
+def editUser(request):
+    pass
+
 
 
 def logoutUser(request):

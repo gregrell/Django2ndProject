@@ -15,7 +15,6 @@ class CustomUser(AbstractUser):
     bio = models.TextField(null=True)
     avatar = models.ImageField(null=True, default="avatar.svg")
 
-
     def __str__(self):
         return self.username
 

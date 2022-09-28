@@ -70,15 +70,20 @@ p{font-size: 0.9rem;}
   right: 3.5px;
 }
 
-.dropdown-item:focus{
+.dropdown-item:hover{
             background-color:gold;
         }
 
+
 .custom-dropdown-menu{
-    font-size: 0.8rem;
+    font-size: 0.9rem;
     padding:0px;
 }
 
+.custom-svg{
+    padding-top:0px;
+    padding-bottom:2px;
+}
 
 
 

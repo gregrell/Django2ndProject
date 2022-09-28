@@ -19,6 +19,10 @@
 
 
 
+
+
+
+
 </style>
 
 <nav class="navbar navbar-expand-sm navbar-dark bg-dark fixed-top d-inline-flex"
@@ -46,7 +50,6 @@
                     {% if request.user.is_authenticated %}
 
 
-
                     <!--<small class="nav-link" style="font-size: 0.9rem; padding-bottom: 0px; margin: 0px;">{{request.user.username}}</small>
                     <a class="nav-link" href="{% url 'logout' %}"
                        style="font-size: 0.9rem; padding-top: 0px;">Logout</a>
@@ -60,15 +63,33 @@
                 <a href="#" role="button" id="dropdownMenuLink"
                    data-bs-toggle="dropdown" aria-expanded="false">
                     <div class="avatar avatar--small active">
-                            <img src="{{request.user.avatar.url}}"/>
-                        </div>
+                        <img src="{{request.user.avatar.url}}"/>
+                    </div>
                 </a>
 
-                <ul class="dropdown-menu d-stacked custom-dropdown-menu"  aria-labelledby="dropdownMenuLink">
-                    <li><a class="dropdown-item" href="#">Profile</a></li>
+                <ul class="dropdown-menu d-stacked custom-dropdown-menu" aria-labelledby="dropdownMenuLink">
+                    <li>
+                        <a class="dropdown-item" href="#">
+                            <svg class="custom-svg" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                 class="bi bi-person" viewBox="0 0 16 16">
+                                <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10z"/>
+                            </svg>
+                            Profile</a></li>
                     <li><a class="dropdown-item" href="#">Another action</a></li>
-                    <li><hr class="hrline"/></li>
-                    <li><a class="dropdown-item" href="#">Logout</a></li>
+                    <li>
+                        <hr class="hrline"/>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" href="#">
+                            <svg class="custom-svg" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                 class="bi bi-unindent" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd"
+                                      d="M13 8a.5.5 0 0 0-.5-.5H5.707l2.147-2.146a.5.5 0 1 0-.708-.708l-3 3a.5.5 0 0 0 0 .708l3 3a.5.5 0 0 0 .708-.708L5.707 8.5H12.5A.5.5 0 0 0 13 8Z"/>
+                                <path fill-rule="evenodd"
+                                      d="M3.5 4a.5.5 0 0 0-.5.5v7a.5.5 0 0 0 1 0v-7a.5.5 0 0 0-.5-.5Z"/>
+                            </svg>
+                            Logout</a>
+                    </li>
                 </ul>
             </div>
 

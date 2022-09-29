@@ -7,6 +7,8 @@ from .forms import PostForm, CustomUserCreationForm, CustomUserChangeForm
 from django.views.generic import ListView
 from django.views.generic.edit import CreateView, DeleteView
 from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth.mixins import LoginRequiredMixin
+
 
 
 # Create your views here.
@@ -67,8 +69,10 @@ def delete_post(request, pk):
 
 # Class based views:
 
-class indexView(ListView):
+class indexView(LoginRequiredMixin,ListView):
     # model = UserPost
+    login_url = 'login'
+    redirect_field_name = 'redirect_to'
     queryset = UserPost.objects.order_by('-publish_date')
     context_object_name = 'user_posts'
     template_name = 'postitApp/index.html'

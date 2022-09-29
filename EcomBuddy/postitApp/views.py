@@ -13,9 +13,13 @@ from django.contrib.auth import login, logout, authenticate
 
 
 def index(request):
-    user_posts = UserPost.objects.all().order_by('-publish_date')
-    context = {'user_posts': user_posts}
-    return render(request, 'postitApp/index.html', context)
+    if request.user.is_authenticated:
+        user_posts = UserPost.objects.all().order_by('-publish_date')
+        context = {'user_posts': user_posts}
+        return render(request, 'postitApp/index.html', context)
+
+    else:
+        return render(request, 'postitApp/registration/landing_page.html', context={})
 
 
 def new_post(request):
@@ -68,6 +72,7 @@ class indexView(ListView):
     queryset = UserPost.objects.order_by('-publish_date')
     context_object_name = 'user_posts'
     template_name = 'postitApp/index.html'
+
 
 
 class newPost(CreateView):

@@ -9,10 +9,9 @@
 
 
 <body>
-
 {% load static %}
 
-
+{% if user.is_authenticated %}
 <div class="container-fluid fs-6"  style="max-width: 1200px;">
     <div class="row content">
         <div class="col-sm-2">
@@ -36,6 +35,9 @@
         </div>
     </div>
 </div>
+{% else %}
+{% include 'postitApp/registration/landing_page.html' %}
+{% endif %}
 
 </body>
 

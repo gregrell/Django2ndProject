@@ -78,6 +78,9 @@ p{font-size: 0.9rem;}
 
 .custom-dropdown-menu{
     font-size: 0.9rem;
+    padding-bottom:2px;
+    padding-top:2px;
+
 }
 
 .custom-svg{

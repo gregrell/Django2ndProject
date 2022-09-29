@@ -2,13 +2,13 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from .models import UserPost, UserImage, CustomUser
 from .forms import PostForm, CustomUserCreationForm, CustomUserChangeForm
+from django.contrib.auth.decorators import login_required
 
 # Here we begin using class based views:
 from django.views.generic import ListView
 from django.views.generic.edit import CreateView, DeleteView
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.mixins import LoginRequiredMixin
-
 
 
 # Create your views here.
@@ -69,7 +69,7 @@ def delete_post(request, pk):
 
 # Class based views:
 
-class indexView(LoginRequiredMixin,ListView):
+class indexView(LoginRequiredMixin, ListView):
     # model = UserPost
     login_url = 'login'
     redirect_field_name = 'redirect_to'
@@ -78,15 +78,18 @@ class indexView(LoginRequiredMixin,ListView):
     template_name = 'postitApp/index.html'
 
 
-
-class newPost(CreateView):
+class newPost(LoginRequiredMixin, CreateView):
+    login_url = 'login'
+    redirect_field_name = 'redirect_to'
     template_name = 'postitApp/new_post.html'
     # model = UserPost
     form_class = PostForm
     # fields = ['caption']
 
 
-class deletePost(DeleteView):
+class deletePost(LoginRequiredMixin, DeleteView):
+    login_url = 'login'
+    redirect_field_name = 'redirect_to'
     model = UserPost
     success_url = '/'
     template_name = 'postitApp/delete_object.html'
@@ -138,11 +141,22 @@ def signup(request):
 
     return render(request, 'postitApp/registration/signup.html', context={'form': form})
 
+
+@login_required()
 def editUser(request):
-    pass
+    user = request.user
+    form = CustomUserChangeForm(instance=user)
+    if request.method == 'POST':
+        form = CustomUserChangeForm(request.POST, request.FILES, instance=user)
+        if form.is_valid():
+            form.save()
+            return redirect('edit-user')
+
+    else:
+        return render(request, 'postitApp/registration/settings.html', context={'form': form})
 
 
-
+@login_required()
 def logoutUser(request):
     logout(request)
     return redirect('index')

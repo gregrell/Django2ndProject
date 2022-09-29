@@ -7,13 +7,19 @@ from django.contrib.auth.models import AbstractUser
 
 # Define function to save to the user folder. Taken from Django user documentation
 def user_directory_path(instance, filename):
-    return 'user_{0}/{1}'.format(instance.post.created_by.id, filename)
+    try:
+        # Saving profile picture from user settings
+        id = instance.id
+    except:
+        # Saving media from creating a new post
+        id = instance.post.created_by.id
+    return 'user_{0}/{1}'.format(id, filename)
 
 
 class CustomUser(AbstractUser):
     email = models.EmailField(unique=True, null=True)
     bio = models.TextField(null=True)
-    avatar = models.ImageField(null=True, default="avatar.svg")
+    avatar = models.ImageField(upload_to=user_directory_path, null=True, default="avatar.svg")
 
     def __str__(self):
         return self.username

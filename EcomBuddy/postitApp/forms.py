@@ -36,6 +36,7 @@ class CustomUserChangeForm(UserChangeForm):
 
     class Meta:
         model = CustomUser
-        fields = (
-            "bio",
-        )
+        fields = ['avatar','bio']
+
+
+

@@ -14,6 +14,11 @@
                     <div class="card-body">
                         <h5 class="card-title">{{user.username}}</h5>
                         <p class="card-text">{{user.bio}}</p>
+                        <p class="card-text">Followed by: {{followed_by.count}}</p>
+                        <p class="card-text">Following: {{following.count}}</p>
+                        {% for follow in following %}
+                        {{follow.following}}
+                        {% endfor %}
                     </div>
                 </div>
 

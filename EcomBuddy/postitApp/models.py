@@ -20,6 +20,9 @@ class CustomUser(AbstractUser):
     email = models.EmailField(unique=True, null=True)
     bio = models.TextField(null=True)
     avatar = models.ImageField(upload_to=user_directory_path, null=True, default="avatar.svg")
+    updated = models.DateTimeField(auto_now=True)
+    created = models.DateTimeField(auto_now_add=True)
+
 
     def __str__(self):
         return self.username
@@ -42,3 +45,8 @@ class UserImage(models.Model):
 class UserVideo(models.Model):
     post = models.ForeignKey(UserPost, on_delete=models.CASCADE)
     video = models.FileField(null=True, blank=True)
+
+class UserFollowing(models.Model):
+    user = models.ForeignKey(CustomUser, related_name='following', on_delete=models.CASCADE, null=True, blank=True)
+    following = models.ForeignKey(CustomUser, related_name='followed_by', on_delete=models.CASCADE, null=True, blank=True)
+

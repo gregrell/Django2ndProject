@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from .models import UserPost, UserImage, CustomUser
+from .models import UserPost, UserImage, CustomUser, UserFollowing
 from .forms import PostForm, CustomUserCreationForm, CustomUserChangeForm
 from django.contrib.auth.decorators import login_required
 
@@ -146,6 +146,10 @@ def signup(request):
 def editUser(request):
     user = request.user
     form = CustomUserChangeForm(instance=user)
+
+    following = user.following.filter(user=user)
+    followed_by = user.followed_by.filter(following=user)
+
     if request.method == 'POST':
         form = CustomUserChangeForm(request.POST, request.FILES, instance=user)
         if form.is_valid():
@@ -153,7 +157,9 @@ def editUser(request):
             return redirect('edit-user')
 
     else:
-        return render(request, 'postitApp/registration/settings.html', context={'form': form})
+        return render(request, 'postitApp/registration/settings.html', context={'form': form,
+                                                                                'following': following,
+                                                                                'followed_by': followed_by})
 
 
 @login_required()

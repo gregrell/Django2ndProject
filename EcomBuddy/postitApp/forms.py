@@ -13,7 +13,7 @@ class PostForm(ModelForm):
 
     class Meta:
         model = UserPost
-        fields = ['caption', 'images']
+        fields = ['caption', 'images', 'user']
         widgets = {
             "caption": forms.TextInput(attrs={'autocomplete': 'off'})
         }

@@ -166,3 +166,7 @@ def editUser(request):
 def logoutUser(request):
     logout(request)
     return redirect('index')
+
+def publicProfile(request,pk):
+    context = {}
+    return render(request, 'postitApp/profile/public_profile.html', context)

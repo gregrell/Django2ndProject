@@ -22,6 +22,9 @@ class CustomUser(AbstractUser):
     avatar = models.ImageField(upload_to=user_directory_path, null=True, default="avatar.svg")
     updated = models.DateTimeField(auto_now=True)
     created = models.DateTimeField(auto_now_add=True)
+    # username (super)
+    # firstname (super)
+    # lastname (super)
 
 
     def __str__(self):

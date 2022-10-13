@@ -9,6 +9,8 @@ from django.views.generic import ListView
 from django.views.generic.edit import CreateView, DeleteView
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import Q
+
 
 
 # Create your views here.
@@ -76,6 +78,20 @@ class indexView(LoginRequiredMixin, ListView):
     queryset = UserPost.objects.order_by('-publish_date')
     context_object_name = 'user_posts'
     template_name = 'postitApp/index.html'
+    def get_queryset(self):
+        """return the last fifty posts of the users that the request user follows"""
+        user = self.request.user
+        following = user.following.filter(user=user)
+        """Build list of users for query filter"""
+        users = []
+        for u in following:
+            users.append(u.following)
+        """Create query object and build it at runtime"""
+        query = Q()
+        for name in users:
+            query = query | Q(user=name)
+        """Chain and filter results"""
+        return UserPost.objects.filter(query).order_by('-publish_date')[:50]
 
 
 class newPost(LoginRequiredMixin, CreateView):

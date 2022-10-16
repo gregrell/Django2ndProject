@@ -11,6 +11,7 @@ from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
 
+from django.template.defaulttags import register
 
 
 # Create your views here.
@@ -93,6 +94,21 @@ class indexView(LoginRequiredMixin, ListView):
         """Chain and filter results"""
         return UserPost.objects.filter(query).order_by('-publish_date')[:50]
 
+    def get_context_data(self, **kwargs):
+        cd = super(indexView, self).get_context_data(**kwargs)
+        cd['not_following'] = CustomUser.objects.all()
+        u_list = cd.get('not_following')
+        fq = {}  # following query dictionary creation
+        """Create the following query dictionary for all the suggested users"""
+        for u in u_list:
+            following_query = UserFollowing.objects.filter(following=u)
+            fq[u.username] = following_query
+        cd['fq'] = fq  # add the feature query dictionary to the context data dictionary
+        return cd
+
+@register.filter
+def get_item(dictionary, key):
+    return dictionary.get(key)
 
 class newPost(LoginRequiredMixin, CreateView):
     login_url = 'login'

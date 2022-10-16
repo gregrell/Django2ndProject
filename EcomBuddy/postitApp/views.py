@@ -80,7 +80,8 @@ class indexView(LoginRequiredMixin, ListView):
     context_object_name = 'user_posts'
     template_name = 'postitApp/index.html'
     def get_queryset(self):
-        """return the last fifty posts of the users that the request user follows"""
+        """return the last fifty posts of the users that the request user follows
+        and return to the context object name"""
         user = self.request.user
         following = user.following.filter(user=user)
         """Build list of users for query filter"""
@@ -95,11 +96,14 @@ class indexView(LoginRequiredMixin, ListView):
         return UserPost.objects.filter(query).order_by('-publish_date')[:50]
 
     def get_context_data(self, **kwargs):
+        """ need to have multiple queries beyond the get_queryset call. Construct a dictionary and call
+        the super class get_context_data to get the 'user_posts' context as queried above in get_queryset
+        this is returned as a dict. Then add additional items as needed to the dict before returning it"""
         cd = super(indexView, self).get_context_data(**kwargs)
         cd['not_following'] = CustomUser.objects.all()
         u_list = cd.get('not_following')
         fq = {}  # following query dictionary creation
-        """Create the following query dictionary for all the suggested users"""
+        """ Create the following query dictionary for all the suggested users """
         for u in u_list:
             following_query = UserFollowing.objects.filter(following=u)
             fq[u.username] = following_query

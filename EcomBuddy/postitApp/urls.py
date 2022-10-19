@@ -16,6 +16,8 @@ urlpatterns = [
     path('new_post/', views.newPost.as_view(), name='create_post'),
     path('new_post_submit/', views.new_post_submit, name='new-post-submit'),
     # path('delete_post <str:pk> /', views.delete_post, name='delete-post')
-    path('delete_post <str:pk> /', views.deletePost.as_view(), name='delete-post')
+    path('delete_post <str:pk> /', views.deletePost.as_view(), name='delete-post'),
+    path('unfollow_user <str:pk> /', views.unfollowUser, name='unfollow-user'),
+    path('follow_user <str:pk> /', views.followUser, name='follow-user')
 ]
 

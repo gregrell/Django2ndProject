@@ -79,6 +79,7 @@ class indexView(LoginRequiredMixin, ListView):
     queryset = UserPost.objects.order_by('-publish_date')
     context_object_name = 'user_posts'
     template_name = 'postitApp/index.html'
+
     def get_queryset(self):
         """return the last fifty posts of the users that the request user follows
         and return to the context object name"""
@@ -110,9 +111,11 @@ class indexView(LoginRequiredMixin, ListView):
         cd['fq'] = fq  # add the feature query dictionary to the context data dictionary
         return cd
 
+
 @register.filter
 def get_item(dictionary, key):
     return dictionary.get(key)
+
 
 class newPost(LoginRequiredMixin, CreateView):
     login_url = 'login'
@@ -203,6 +206,29 @@ def logoutUser(request):
     logout(request)
     return redirect('index')
 
-def publicProfile(request,pk):
+
+""" This method called when the logged in user wishes to view their own public profile page """
+
+
+@login_required()
+def publicProfile(request, pk):
     context = {}
     return render(request, 'postitApp/profile/public_profile.html', context)
+
+
+""" This method called when user selects to unfollow another user pk=user_id to unfollow """
+
+
+@login_required()
+def unfollowUser(request, pk):
+    print(pk)
+    return redirect('index')
+
+
+""" This method called when user selects to follow another user's public profile pk=user_id to follow """
+
+
+@login_required()
+def followUser(request, pk):
+    print(pk)
+    return redirect('index')

@@ -26,11 +26,9 @@
                 <ul class="dropdown-menu custom-dropdown-menu" aria-labelledby="dropdownMenuButton">
                     <li><a class="dropdown-item" href="#">Action</a></li>
                     <li><a class="dropdown-item" href="#">Another action</a></li>
-                    <li><a class="dropdown-item" href="#">Something else here</a></li>
+                    <li><a class="dropdown-item" href="{% url 'unfollow-user' post.user.id %}">Unfollow</a></li>
                 </ul>
             </div>
-
-
         </div>
     </div>
 

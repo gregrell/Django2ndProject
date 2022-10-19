@@ -1,29 +1,49 @@
+{% load static %}
 
 <body>
-<p>Suggested</p>
-{% for u in not_following%}
-<div class="avatar avatar--small active">
-    <a href="#">
-        <img src="{{u.avatar.url}}"/>
-    </a>
+<div class="container-fluid" style="padding-left: 8px;">
+    <p>Suggested</p>
 </div>
-<h6>{{u.username}}</h6>
+{% for u in not_following%}
 
-<!--
-Dot lookups can be summarized like this: when the template system encounters a dot in a variable name, it tries the following lookups, in this order:
+<div class="container-fluid" style="padding: 3px">
+    <div class="row">
+        <div class="col-sm-2">
+            <div class="avatar avatar--small active">
+                <a href="#" tabindex="0" role="button" data-bs-toggle="popover" data-bs-trigger="focus"
+                   title="" data-bs-content="Learn Javascript."
+                   data-bs-original-title="Dismissible popover">
+                    <img src="{{u.avatar.url}}"/>
+                </a>
+            </div>
+        </div>
 
-Dictionary lookup (e.g., foo["bar"])
-Attribute lookup (e.g., foo.bar)
-Method call (e.g., foo.bar())
-List-index lookup (e.g., foo[2])
-The system uses the first lookup type that works. It’s short-circuit logic.
--->
-
-<small>Followers {{ fq|get_item:u.username|length }}</small>
-<br>
+        <div class="col-sm-5">
+            <h6 style="padding: 0px; margin: 0px">{{u.username}}</h6>
 
 
+            <!--
+            Get the number of followers for the unfollowed users. This requires a custom made query as described below
+
+            Dot lookups can be summarized like this: when the template system encounters a dot in a variable name, it tries the following lookups, in this order:
+
+            Dictionary lookup (e.g., foo["bar"])
+            Attribute lookup (e.g., foo.bar)
+            Method call (e.g., foo.bar())
+            List-index lookup (e.g., foo[2])
+            The system uses the first lookup type that works. It’s short-circuit logic.
+            -->
+            <!--This logic is contained in the view as get_item()-->
+            <small>{{ fq|get_item:u.username|length }} Followers</small>
+        </div>
+        <div class="col-sm-1">
+            <a href="{% url 'follow-user' u.id %}" style="color:#2349fa; text-decoration: none"><small><b>Follow</b></small></a>
+        </div>
+    </div>
+</div>
 {% endfor %}
 
+<!--Call the popup script that is canned with bootstrap-->
+<script src="{% static 'js/popover.js' %}"></script>
 
 </body>

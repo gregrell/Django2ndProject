@@ -1,3 +1,5 @@
+import random
+
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from .models import UserPost, UserImage, CustomUser, UserFollowing
@@ -106,9 +108,24 @@ class indexView(LoginRequiredMixin, ListView):
         the super class get_context_data to get the 'user_posts' context as queried above in get_queryset
         this is returned as a dict. Then add additional items as needed to the dict before returning it"""
         cd = super(indexView, self).get_context_data(**kwargs)
-        cd['not_following'] = CustomUser.objects.all()
+
+        """ Generate a random set of people that are not followed for the suggested users to follow 
+        do this by getting all users as list, then getting all followed users, convert them to a set
+        then do set subtraction operation, convert the result to a list, and use random to pick 5 from that list
+        if the set size is less than 10 users, this is handled by sample_size one line conditional"""
+
+        all_user_id_list = list(CustomUser.objects.all().values_list('id', flat=True))
+        followed_user_id_list = list(UserFollowing.objects.filter(user = self.request.user).values_list('following',
+                                                                                                        flat=True))
+        all_user_not_followed_id_set = set(all_user_id_list) - set(followed_user_id_list)
+        all_user_not_followed_id_list= list(all_user_not_followed_id_set)
+        sample_size = len(all_user_not_followed_id_list) if len(all_user_not_followed_id_list) < 5 else 5
+        suggested_unfollowed_users_list = random.sample(all_user_not_followed_id_list, sample_size)
+
+
+        cd['not_following'] = CustomUser.objects.filter(pk__in=suggested_unfollowed_users_list)
         u_list = cd.get('not_following')
-        fq = {}  # following query dictionary creation
+        fq = {}  # following query dictionary creation for showing the number of followers that an unfollowed user has
         """ Create the following query dictionary for all the suggested users """
         for u in u_list:
             following_query = UserFollowing.objects.filter(following=u)
@@ -239,6 +256,19 @@ def unfollowUser(request, pk):
 
 @login_required()
 def followUser(request, pk):
-    relationship = UserFollowing(user=request.user, following=CustomUser.objects.get(pk=pk))
-    relationship.save()
+    requesting_user = CustomUser.objects.get(pk=request.user.id)
+    followed_user = CustomUser.objects.get(pk=pk)
+
+    """ SQL Lite does not enforce unique_together uniqueness, therefore have to 
+    implement in logic. Try to find the relationhip. If it exists then there's no error, don't save
+    if the relationship search does throw an error, then it does not exist. Create the relationship."""
+
+    try:
+        UserFollowing.objects.get(user=requesting_user, following = followed_user)
+        print('following already exists')
+        #TODO generate error message to template
+    except:
+        relationship = UserFollowing(user=requesting_user, following=followed_user)
+        relationship.save()
+
     return redirect('index')

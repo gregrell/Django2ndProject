@@ -50,8 +50,12 @@ class UserVideo(models.Model):
     video = models.FileField(null=True, blank=True)
 
 class UserFollowing(models.Model):
-    user = models.ForeignKey(CustomUser, related_name='following', on_delete=models.CASCADE, null=True, blank=True)
-    following = models.ForeignKey(CustomUser, related_name='followed_by', on_delete=models.CASCADE, null=True, blank=True)
+    user = models.ForeignKey(CustomUser, related_name='following', on_delete=models.CASCADE, null=False, blank=False)
+    following = models.ForeignKey(CustomUser,
+                                  related_name='followed_by',
+                                  on_delete=models.CASCADE,
+                                  null=False,
+                                  blank=False)
 
     class Meta:
         unique_together = ['user', 'following']

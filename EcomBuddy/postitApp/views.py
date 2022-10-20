@@ -17,14 +17,14 @@ from django.template.defaulttags import register
 # Create your views here.
 
 
-def index(request):
-    if request.user.is_authenticated:
-        user_posts = UserPost.objects.all().order_by('-publish_date')
-        context = {'user_posts': user_posts}
-        return render(request, 'postitApp/index.html', context)
-
-    else:
-        return render(request, 'postitApp/registration/landing_page.html', context={})
+# def index(request):
+#     if request.user.is_authenticated:
+#         user_posts = UserPost.objects.all().order_by('-publish_date')
+#         context = {'user_posts': user_posts}
+#         return render(request, 'postitApp/index.html', context)
+#
+#     else:
+#         return render(request, 'postitApp/registration/landing_page.html', context={})
 
 
 def new_post(request):
@@ -90,11 +90,16 @@ class indexView(LoginRequiredMixin, ListView):
         for u in following:
             users.append(u.following)
         """Create query object and build it at runtime"""
-        query = Q()
-        for name in users:
-            query = query | Q(user=name)
-        """Chain and filter results"""
-        return UserPost.objects.filter(query).order_by('-publish_date')[:50]
+
+        if len(users) is not 0:
+            query = Q()
+            for name in users:
+                query = query | Q(user=name)
+            """Chain and filter results"""
+            posts = UserPost.objects.filter(query).order_by('-publish_date')[:50]
+        else:
+            posts = None
+        return posts
 
     def get_context_data(self, **kwargs):
         """ need to have multiple queries beyond the get_queryset call. Construct a dictionary and call
@@ -221,7 +226,11 @@ def publicProfile(request, pk):
 
 @login_required()
 def unfollowUser(request, pk):
-    print(pk)
+    try:
+        relationsip = UserFollowing.objects.get(user=request.user, following=pk)
+        relationsip.delete()
+    except:
+        pass
     return redirect('index')
 
 
@@ -230,5 +239,6 @@ def unfollowUser(request, pk):
 
 @login_required()
 def followUser(request, pk):
-    print(pk)
+    relationship = UserFollowing(user=request.user, following=CustomUser.objects.get(pk=pk))
+    relationship.save()
     return redirect('index')

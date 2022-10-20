@@ -34,10 +34,11 @@
             The system uses the first lookup type that works. It’s short-circuit logic.
             -->
             <!--This logic is contained in the view as get_item()-->
-            <small>{{ fq|get_item:u.username|length }} Followers</small>
+            <p><small>{{ fq|get_item:u.username|length }} Followers</small></p>
+
         </div>
         <div class="col-sm-1">
-            <a href="{% url 'follow-user' u.id %}" style="color:#2349fa; text-decoration: none"><small><b>Follow</b></small></a>
+            <a href="{% url 'follow-user' u.id %}" style="color:#2349fa; text-decoration: none"><p><small>Follow</small></p></a>
         </div>
     </div>
 </div>

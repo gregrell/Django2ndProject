@@ -62,3 +62,7 @@ class UserFollowing(models.Model):
         unique_together = ['user', 'following']
 
 
+class LikesTable(models.Model):
+    #TODO implement
+    pass
+

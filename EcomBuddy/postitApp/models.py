@@ -56,6 +56,7 @@ class UserFollowing(models.Model):
                                   on_delete=models.CASCADE,
                                   null=False,
                                   blank=False)
+    #TODO date field for when followed occured
 
     class Meta:
         unique_together = ['user', 'following']

@@ -61,14 +61,13 @@ class UserFollowing(models.Model):
     class Meta:
         unique_together = ['user', 'following']
 
-"""
+
 class LikesTable(models.Model):
     #TODO implement
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=False, blank=False)
     post = models.ForeignKey(UserPost, on_delete=models.CASCADE, null=False, blank=False)
+    liked_date = models.DateTimeField(auto_now_add=True)
+
 
     class Meta:
         unique_together = ['user', 'post']
-        """
-
-

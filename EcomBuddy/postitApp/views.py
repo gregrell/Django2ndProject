@@ -2,7 +2,7 @@ import random
 
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from .models import UserPost, UserImage, CustomUser, UserFollowing
+from .models import UserPost, UserImage, CustomUser, UserFollowing, LikesTable
 from .forms import PostForm, CustomUserCreationForm, CustomUserChangeForm
 from django.contrib.auth.decorators import login_required
 
@@ -105,13 +105,12 @@ class indexView(LoginRequiredMixin, ListView):
         if the set size is less than 10 users, this is handled by sample_size one line conditional"""
 
         all_user_id_list = list(CustomUser.objects.all().values_list('id', flat=True))
-        followed_user_id_list = list(UserFollowing.objects.filter(user = self.request.user).values_list('following',
-                                                                                                        flat=True))
+        followed_user_id_list = list(UserFollowing.objects.filter(user=self.request.user).values_list('following',
+                                                                                                      flat=True))
         all_user_not_followed_id_set = set(all_user_id_list) - set(followed_user_id_list)
-        all_user_not_followed_id_list= list(all_user_not_followed_id_set)
+        all_user_not_followed_id_list = list(all_user_not_followed_id_set)
         sample_size = len(all_user_not_followed_id_list) if len(all_user_not_followed_id_list) < 5 else 5
         suggested_unfollowed_users_list = random.sample(all_user_not_followed_id_list, sample_size)
-
 
         cd['not_following'] = CustomUser.objects.filter(pk__in=suggested_unfollowed_users_list)
         u_list = cd.get('not_following')
@@ -121,6 +120,21 @@ class indexView(LoginRequiredMixin, ListView):
             following_query = UserFollowing.objects.filter(following=u)
             fq[u.username] = following_query
         cd['fq'] = fq  # add the feature query dictionary to the context data dictionary
+
+        """ Get the likes and comments for each post. Place this in context data. """
+        lq = {}
+        request_user_liked_post = {}
+        for post in cd.get('user_posts'):
+            likes_query = LikesTable.objects.filter(post=post)
+            lq[post] = likes_query
+            users_who_liked_post = likes_query.values('user_id')
+            for user in users_who_liked_post:
+                if self.request.user.id in user.values():
+                    request_user_liked_post[post] = True
+        cd['lq'] = lq
+        cd['request_user_liked_post'] = request_user_liked_post
+        print(cd.get('request_user_liked_post'))
+
         return cd
 
 
@@ -254,11 +268,42 @@ def followUser(request, pk):
     if the relationship search does throw an error, then it does not exist. Create the relationship."""
 
     try:
-        UserFollowing.objects.get(user=requesting_user, following = followed_user)
+        UserFollowing.objects.get(user=requesting_user, following=followed_user)
         print('following already exists')
-        #TODO generate error message to template
+        # TODO generate error message to template
     except:
         relationship = UserFollowing(user=requesting_user, following=followed_user)
         relationship.save()
 
     return redirect('index')
+
+
+""" This method called if the user performs a like on a post. Check to see if like exists, 
+ if not then generate instance and save in database. If the like already exists, then unlike
+  by deleting the existing entry """
+
+
+@login_required()
+def likePost(request, post_id):
+    post_instance = UserPost.objects.get(id=post_id)
+    like = LikesTable(user=request.user, post=post_instance)
+    """ see if this instance already exists """
+    existing_like = LikesTable.objects.filter(user=request.user, post=post_instance)
+    if not existing_like:
+        """ Like the post by saving the new instance in the database """
+        like.save()
+    else:
+        """ Unlike the post by deleting the existing database instance """
+        existing_like.delete()
+    return redirect('index')
+
+
+""" HTMX Playground """
+
+
+def htmxPlay(request):
+    context = {}
+    return render(request, 'postitApp/htmx_play.html', context)
+
+
+""" ***************************** """

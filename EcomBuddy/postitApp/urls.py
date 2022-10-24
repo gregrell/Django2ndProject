@@ -4,7 +4,7 @@ from . import views
 from .views import indexView
 
 urlpatterns = [
-    #path('', views.index, name='index'),
+    # path('', views.index, name='index'),
     path('', indexView.as_view(), name='index'),
     path('landing/', views.landingPage, name='landing-page'),
     path('about/', views.aboutPage, name='about'),
@@ -18,6 +18,13 @@ urlpatterns = [
     # path('delete_post <str:pk> /', views.delete_post, name='delete-post')
     path('delete_post <str:pk> /', views.deletePost.as_view(), name='delete-post'),
     path('unfollow_user <str:pk> /', views.unfollowUser, name='unfollow-user'),
-    path('follow_user <str:pk> /', views.followUser, name='follow-user')
+    path('follow_user <str:pk> /', views.followUser, name='follow-user'),
+    path('like_post <str:post_id> /', views.likePost, name='like-post')
 ]
 
+htmxpatterns = [
+    path('play/', views.htmxPlay, name='htmxplay'),
+
+]
+
+urlpatterns += htmxpatterns

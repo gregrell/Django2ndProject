@@ -14,6 +14,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
 
 from django.template.defaulttags import register
+from django.http import HttpResponse
 
 
 # Create your views here.
@@ -302,8 +303,20 @@ def likePost(request, post_id):
 
 
 def htmxPlay(request):
-    context = {}
+    form = CustomUserCreationForm()
+    context = {'form': form}
     return render(request, 'postitApp/htmx_play.html', context)
+
+
+""" htmx called method to determine if a user email exists """
+
+
+def checkUsername(request):
+    email = request.POST.get('email')
+    if CustomUser.objects.filter(email=email).exists():
+        return HttpResponse("<div style='color:red;'>This email already exists</div>")
+    else:
+        return HttpResponse("<div style='color:green;'>Available</div>")
 
 
 """ ***************************** """

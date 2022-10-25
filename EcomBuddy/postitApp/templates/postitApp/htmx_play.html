@@ -1,8 +1,27 @@
 {% extends 'MainTemplate.html' %}
 
+{% load widget_tweaks %}
+
+
 {% block content %}
 <div class="container">
     <h1>HTMX PLAY</h1>
+
+    <form method="POST" action="#" autocomplete="off">
+        {%csrf_token%}
+
+        <div class="form-group mb-3">
+            <label>{{form.email.label_tag}}</label>
+            {{form.email.errors}}
+            {% render_field form.email class="form-control" hx-post="/check_username/" hx-trigger="keyup" hx-swap="outerhtml" hx-target="#username-error" %}
+
+            <div id="username-error">
+
+            </div>
+        </div>
+    </form>
+
+
 </div>
 
 

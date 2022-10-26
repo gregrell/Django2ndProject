@@ -304,7 +304,8 @@ def likePost(request, post_id):
 
 def htmxPlay(request):
     form = CustomUserCreationForm()
-    context = {'form': form}
+    posts = request.user.posts.all()
+    context = {'form': form, 'posts': posts}
     return render(request, 'postitApp/htmx_play.html', context)
 
 
@@ -317,6 +318,16 @@ def checkUsername(request):
         return HttpResponse("<div style='color:red;'>This email already exists</div>")
     else:
         return HttpResponse("<div style='color:green;'>Available</div>")
+
+
+""" htmx create a non image user post """
+def createnoimagepost(request):
+    caption = request.POST.get('captiontext')
+    post = UserPost.objects.create(caption=caption)
+    request.user.posts.add(post)
+    posts = request.user.posts.all()
+    return render(request, 'postitApp/user_posts.html', {'posts': posts})
+
 
 
 """ ***************************** """

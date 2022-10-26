@@ -32,7 +32,7 @@ class CustomUser(AbstractUser):
 
 
 class UserPost(models.Model):
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='posts', null=True) # CustomUser.posts.all()
     caption = models.CharField(max_length=200)
     alt_caption = models.TextField(max_length=50, null=True)
     publish_date = models.DateTimeField(auto_now_add=True)

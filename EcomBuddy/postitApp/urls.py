@@ -24,7 +24,8 @@ urlpatterns = [
 
 htmxpatterns = [
     path('play/', views.htmxPlay, name='htmxplay'),
-    path('check_username/', views.checkUsername, name='check-username')
+    path('check_username/', views.checkUsername, name='check-username'),
+    path('createnoimagepost/', views.createnoimagepost, name='createnoimagepost')
 
 ]
 

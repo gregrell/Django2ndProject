@@ -1,7 +1,7 @@
 {% extends 'MainTemplate.html' %}
 
 {% load widget_tweaks %}
-
+{% load static %}
 
 {% block content %}
 <div class="container">
@@ -13,15 +13,30 @@
         <div class="form-group mb-3">
             <label>{{form.email.label_tag}}</label>
             {{form.email.errors}}
-            {% render_field form.email class="form-control" hx-post="/check_username/" hx-trigger="keyup" hx-swap="outerhtml" hx-target="#username-error" %}
+            <!--            Trigger Delay can be achieved by delay:0.5s, throttling can be done as well using throttle:0.5s
+                             you can also use changed-->
+            {% render_field form.email class="form-control" hx-post="/check_username/" hx-trigger="keyup delay:0.5s" hx-swap="outerhtml" hx-target="#username-error" %}
 
             <div id="username-error">
-
             </div>
         </div>
     </form>
 
+    <div>
+        <div class="input-group">
+            <form>
+                {%csrf_token%}
+                <input type="text" class="form-control" name="captiontext" placeholder="Caption" aria-label="Caption"
+                       aria-describedby="input-group-left">
+                <button class="btn btn-primary" hx-post="{% url 'createnoimagepost' %}" hx-target="#postslist">
 
+            </form>
+
+        </div>
+        <div id="postslist">
+            {% include 'postitApp/user_posts.html' %}
+        </div>
+    </div>
 </div>
 
 

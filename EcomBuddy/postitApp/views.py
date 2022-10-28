@@ -329,5 +329,7 @@ def createnoimagepost(request):
     return render(request, 'postitApp/user_posts.html', {'posts': posts})
 
 
+def deletepost(request):
+    pass
 
 """ ***************************** """

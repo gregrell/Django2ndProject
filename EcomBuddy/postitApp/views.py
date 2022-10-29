@@ -5,6 +5,7 @@ from django.contrib import messages
 from .models import UserPost, UserImage, CustomUser, UserFollowing, LikesTable
 from .forms import PostForm, CustomUserCreationForm, CustomUserChangeForm
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_http_methods
 
 # Here we begin using class based views:
 from django.views.generic import ListView
@@ -301,7 +302,7 @@ def likePost(request, post_id):
 
 """ HTMX Playground """
 
-
+@login_required()
 def htmxPlay(request):
     form = CustomUserCreationForm()
     posts = request.user.posts.all()
@@ -311,7 +312,8 @@ def htmxPlay(request):
 
 """ htmx called method to determine if a user email exists """
 
-
+@login_required()
+@require_http_methods(['POST'])
 def checkUsername(request):
     email = request.POST.get('email')
     if CustomUser.objects.filter(email=email).exists():
@@ -321,6 +323,8 @@ def checkUsername(request):
 
 
 """ htmx create a non image user post """
+@login_required()
+@require_http_methods(['POST'])
 def createnoimagepost(request):
     caption = request.POST.get('captiontext')
     post = UserPost.objects.create(caption=caption)
@@ -328,14 +332,14 @@ def createnoimagepost(request):
     posts = request.user.posts.all()
     return render(request, 'postitApp/user_posts.html', {'posts': posts})
 
-
+@login_required()
+@require_http_methods(['DELETE'])
 def deletepost(request, pk):
     # request.user.posts.remove(pk)
     post = UserPost.objects.get(pk=pk)
     post.delete()
     # request.user.posts.remove(post)
     posts = request.user.posts.all()
-
     return render(request, 'postitApp/user_posts.html', {'posts': posts})
 
 

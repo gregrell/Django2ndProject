@@ -27,8 +27,8 @@
             <form>
                 {%csrf_token%}
                 <input type="text" class="form-control" name="captiontext" placeholder="Caption" aria-label="Caption"
-                       aria-describedby="input-group-left">
-                <button class="btn btn-primary" hx-post="{% url 'createnoimagepost' %}" hx-target="#postslist">
+                       aria-describedby="input-group-left" autocomplete="off">
+                <button class="btn btn-primary" hx-post="{% url 'createnoimagepost' %}" hx-target="#postslist">add</button>
 
             </form>
 

@@ -26,7 +26,7 @@ htmxpatterns = [
     path('play/', views.htmxPlay, name='htmxplay'),
     path('check_username/', views.checkUsername, name='check-username'),
     path('createnoimagepost/', views.createnoimagepost, name='createnoimagepost'),
-    path('deletepost <str:post_id>/', views.deletepost, name='deletepost')
+    path('deletepost <int:pk>/', views.deletepost, name='deletepost')
 
 ]
 

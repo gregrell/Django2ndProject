@@ -4,8 +4,7 @@
         {{post}}
         <span class="badge bg-danger" style="cursor: pointer;"
         hx-delete="{% url 'deletepost' post.id %}"
-        hx-target="#postslist"
-        hx-confirm="Are you sure?">X</span>
+        hx-target="#postslist">X</span>
     </li>
     <br>
     {% endfor %}

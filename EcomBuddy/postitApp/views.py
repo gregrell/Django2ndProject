@@ -329,7 +329,14 @@ def createnoimagepost(request):
     return render(request, 'postitApp/user_posts.html', {'posts': posts})
 
 
-def deletepost(request):
-    pass
+def deletepost(request, pk):
+    # request.user.posts.remove(pk)
+    post = UserPost.objects.get(pk=pk)
+    post.delete()
+    # request.user.posts.remove(post)
+    posts = request.user.posts.all()
+
+    return render(request, 'postitApp/user_posts.html', {'posts': posts})
+
 
 """ ***************************** """

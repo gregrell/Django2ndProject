@@ -37,7 +37,7 @@ class UserPost(models.Model):
     alt_caption = models.TextField(max_length=50, null=True)
     publish_date = models.DateTimeField(auto_now_add=True)
 
-    def __str__(self): return self.caption
+    def __str__(self): return self.caption  # Keep in mind, this will return as primary key
 
 
 class UserImage(models.Model):

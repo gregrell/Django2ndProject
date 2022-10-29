@@ -1,10 +1,20 @@
+<form>
+    {%csrf_token%}
+    <input type="text" class="form-control" name="captiontext" placeholder="Caption" aria-label="Caption"
+           aria-describedby="input-group-left" autocomplete="off">
+    <button class="btn btn-primary" hx-post="{% url 'createnoimagepost' %}" hx-target="#postslist"
+            hx-include="[name='captiontext']">add
+    </button>
+
+</form>
+
 <ul class="list-group col-4">
     {% for post in posts %}
     <li class="list-group-item d-flex justify-content-between align-items-center">
         {{post}}
         <span class="badge bg-danger" style="cursor: pointer;"
-        hx-delete="{% url 'deletepost' post.id %}"
-        hx-target="#postslist">X</span>
+              hx-delete="{% url 'deletepost' post.id %}"
+              hx-target="#postslist">X</span>
     </li>
     <br>
     {% endfor %}

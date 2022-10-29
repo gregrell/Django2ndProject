@@ -5,8 +5,9 @@
     <button class="btn btn-primary" hx-post="{% url 'createnoimagepost' %}" hx-target="#postslist"
             hx-include="[name='captiontext']">add
     </button>
-
 </form>
+
+
 
 <ul class="list-group col-4">
     {% for post in posts %}

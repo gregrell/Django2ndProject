@@ -1,0 +1,13 @@
+
+
+
+
+<input type="text"
+       hx-post="{% url 'search-user' %}"
+       hx-target="results"
+       hx-trigger = "keyup changed delay: 500ms"
+       name = "search"
+       class = "form-control-sm mr-2"
+       placeholder="Search User..."
+       autocomplete="off"/>
+

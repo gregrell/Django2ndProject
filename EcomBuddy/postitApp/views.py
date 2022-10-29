@@ -342,5 +342,16 @@ def deletepost(request, pk):
     posts = request.user.posts.all()
     return render(request, 'postitApp/user_posts.html', {'posts': posts})
 
+""" Dynamic Searchbar for User Search """
+
+@login_required()
+def searchuser(request):
+    # request.user.posts.remove(pk)
+    post = UserPost.objects.get(pk=pk)
+    post.delete()
+    # request.user.posts.remove(post)
+    posts = request.user.posts.all()
+    return render(request, 'postitApp/user_posts.html', {'posts': posts})
+
 
 """ ***************************** """

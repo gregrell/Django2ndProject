@@ -327,7 +327,7 @@ def checkUsername(request):
 @require_http_methods(['POST'])
 def createnoimagepost(request):
     caption = request.POST.get('captiontext')
-    post = UserPost.objects.create(caption=caption)
+    post = UserPost.objects.get_or_create(caption=caption)[0]
     request.user.posts.add(post)
     posts = request.user.posts.all()
     return render(request, 'postitApp/user_posts.html', {'posts': posts})

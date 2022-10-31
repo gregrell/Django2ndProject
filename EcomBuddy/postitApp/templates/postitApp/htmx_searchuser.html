@@ -1,13 +1,12 @@
-
-
-
-
 <input type="text"
        hx-post="{% url 'search-user' %}"
-       hx-target="results"
-       hx-trigger = "keyup changed delay: 500ms"
-       name = "search"
-       class = "form-control-sm mr-2"
+       hx-target="#results"
+       hx-trigger="keyup changed delay: 400ms"
+       name="search"
+       class="form-control-sm mr-2"
        placeholder="Search User..."
        autocomplete="off"/>
 
+<div id="results">
+    {% include 'postitApp/HTMX/dynamic_user_search_results.html' %}
+</div>

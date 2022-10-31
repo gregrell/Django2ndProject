@@ -346,12 +346,12 @@ def deletepost(request, pk):
 
 @login_required()
 def searchuser(request):
-    # request.user.posts.remove(pk)
-    post = UserPost.objects.get(pk=pk)
-    post.delete()
-    # request.user.posts.remove(post)
-    posts = request.user.posts.all()
-    return render(request, 'postitApp/user_posts.html', {'posts': posts})
+    search_text = request.POST.get('search')
+    if not search_text:
+        results = ""
+    else:
+        results = CustomUser.objects.filter(username__startswith=search_text)
+    return render(request, 'postitApp/HTMX/dynamic_user_search_results.html', {'results': results})
 
 
 """ ***************************** """

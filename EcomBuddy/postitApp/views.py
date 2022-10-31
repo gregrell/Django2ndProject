@@ -349,9 +349,12 @@ def searchuser(request):
     search_text = request.POST.get('search')
     if not search_text:
         results = ""
+        searchbool = False
     else:
         results = CustomUser.objects.filter(username__startswith=search_text)
-    return render(request, 'postitApp/HTMX/dynamic_user_search_results.html', {'results': results})
+        searchbool = True
+    return render(request, 'postitApp/HTMX/dynamic_user_search_results.html', {'results': results,
+                                                                               'searchbool': searchbool})
 
 
 """ ***************************** """

@@ -1,7 +1,17 @@
-{% for result in results %}
-<ul>
-    <li>
-        {{result}}
-    </li>
-</ul>
-{% endfor %}
+{% if searchbool %}
+    {% if results %}
+        {% for result in results %}
+        <ul>
+            <li>
+                {{result}}
+            </li>
+        </ul>
+        {% endfor %}
+
+    {% else %}
+        No Reults
+    {% endif %}
+
+{%else%}
+
+{% endif %}

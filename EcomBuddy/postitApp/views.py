@@ -307,7 +307,7 @@ def htmxPlay(request):
     form = CustomUserCreationForm()
     posts = request.user.posts.all()
     context = {'form': form, 'posts': posts}
-    return render(request, 'postitApp/htmx_play.html', context)
+    return render(request, 'postitApp/HTMX/htmx_play.html', context)
 
 
 """ htmx called method to determine if a user email exists """
@@ -330,7 +330,7 @@ def createnoimagepost(request):
     post = UserPost.objects.get_or_create(caption=caption)[0]
     request.user.posts.add(post)
     posts = request.user.posts.all()
-    return render(request, 'postitApp/user_posts.html', {'posts': posts})
+    return render(request, 'postitApp/HTMX/user_posts.html', {'posts': posts})
 
 @login_required()
 @require_http_methods(['DELETE'])
@@ -349,7 +349,7 @@ def searchuser(request):
     search_text = request.POST.get('search')
     if not search_text:
         results = ""
-        searchbool = False
+        searchbool = False  # Used in order to display 'no results' or not on the template
     else:
         results = CustomUser.objects.filter(username__startswith=search_text)
         searchbool = True

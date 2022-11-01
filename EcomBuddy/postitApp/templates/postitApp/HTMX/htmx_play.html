@@ -1,0 +1,55 @@
+{% extends 'MainTemplate.html' %}
+
+{% load widget_tweaks %}
+{% load static %}
+
+{% block content %}
+<div class="container fluid fs-6">
+    <h1>HTMX PLAY</h1>
+
+    <div class="row content">
+        <div class="col-sm-3">
+            <form method="POST" action="#" autocomplete="off">
+                {%csrf_token%}
+
+                <div class="form-group mb-1">
+                    <h5>User Email Check</h5>
+                    <label>{{form.email.label_tag}}</label>
+                    {{form.email.errors}}
+                    <!--            Trigger Delay can be achieved by delay:0.5s, throttling can be done as well using throttle:0.5s
+                                     you can also use changed-->
+                    {% render_field form.email class="form-control" hx-post="/check_username/" hx-trigger="keyup delay:0.5s" hx-swap="outerhtml" hx-target="#username-error" %}
+
+                    <div id="username-error">
+                        <!--  This section to be replaced by HTMX load event -->
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="col-sm-3">
+
+            <div id="postslist">
+                <h5>Add Post</h5>
+                {% include 'postitApp/HTMX/user_posts.html' %}
+            </div>
+            <div id="htmx_usersearch">
+                <h5>Dynamic User Search</h5>
+                <div class="form-group mb-1">
+                    {% include 'postitApp/HTMX/htmx_searchuser.html' %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-3">
+            <h5>PissShit</h5>
+
+        </div>
+
+
+    </div>
+
+</div>
+
+
+{% endblock %}

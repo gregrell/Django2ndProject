@@ -340,7 +340,7 @@ def deletepost(request, pk):
     post.delete()
     # request.user.posts.remove(post)
     posts = request.user.posts.all()
-    return render(request, 'postitApp/user_posts.html', {'posts': posts})
+    return render(request, 'postitApp/HTMX/user_posts.html', {'posts': posts})
 
 """ Dynamic Searchbar for User Search """
 

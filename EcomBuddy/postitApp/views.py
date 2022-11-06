@@ -366,4 +366,10 @@ def dogsList(request):
     return render(request, 'postitApp/HTMX/DogsSortedList.html', {})
 
 
+def dogsNotPreferredList(request):
+    not_preferred = dog.objects.exclude(user_owns=request.user)
+    context = {'not_preferred': not_preferred}
+    return render(request, 'postitApp/HTMX/DogsNotPreferred.html', context)
+
+
 """ ***************************** """

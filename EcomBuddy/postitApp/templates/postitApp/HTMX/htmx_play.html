@@ -44,10 +44,8 @@
 
 
         <div class="col-sm-3">
-            <div class="sortable">
-                <div>piss</div>
-                <div>shit</div>
-            </div>
+            <h5>Order Stuff</h5>
+
 
             <div hx-get="{% url 'dogs-list' %}" hx-trigger="load" hx-target="#dogs_stuff">
                 {% include 'postitApp/HTMX/DogsSortableList.html' %}
@@ -56,6 +54,15 @@
 
                 </div>
             </div>
+        </div>
+
+        <div class="col-sm-2">
+            <h5>Dogs not preferred</h5>
+            <div hx-get="{% url 'dogs-notpreferred-list' %}" hx-trigger="load" hx-target="#dogs_not_preferred_list">
+                <div id="dogs_not_preferred_list">
+                </div>
+            </div>
+
         </div>
 
     </div>

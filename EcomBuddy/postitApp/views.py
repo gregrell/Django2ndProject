@@ -2,7 +2,7 @@ import random
 
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from .models import UserPost, UserImage, CustomUser, UserFollowing, LikesTable
+from .models import UserPost, UserImage, CustomUser, UserFollowing, LikesTable, dog, userDogPreference
 from .forms import PostForm, CustomUserCreationForm, CustomUserChangeForm
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_http_methods
@@ -306,7 +306,9 @@ def likePost(request, post_id):
 def htmxPlay(request):
     form = CustomUserCreationForm()
     posts = request.user.posts.all()
-    context = {'form': form, 'posts': posts}
+    dogs = userDogPreference.objects.filter(user=request.user)
+    print(dogs)
+    context = {'form': form, 'posts': posts, 'dogs': dogs}
     return render(request, 'postitApp/HTMX/htmx_play.html', context)
 
 
@@ -355,6 +357,13 @@ def searchuser(request):
         searchbool = True
     return render(request, 'postitApp/HTMX/dynamic_user_search_results.html', {'results': results,
                                                                                'searchbool': searchbool})
+
+
+""" Movies List - filtered by movies that don't exist in the user's movies """
+
+
+def dogsList(request):
+    return render(request, 'postitApp/HTMX/DogsSortedList.html', {})
 
 
 """ ***************************** """

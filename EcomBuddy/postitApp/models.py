@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.db.models.functions import Lower
 
 
 # Create your models here.
@@ -63,11 +64,29 @@ class UserFollowing(models.Model):
 
 
 class LikesTable(models.Model):
-    #TODO implement
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=False, blank=False)
     post = models.ForeignKey(UserPost, on_delete=models.CASCADE, null=False, blank=False)
     liked_date = models.DateTimeField(auto_now_add=True)
 
-
     class Meta:
         unique_together = ['user', 'post']
+
+
+""" HTMX Learning Stuff """
+
+
+class dog(models.Model):
+    name = models.CharField(max_length=200, unique=True)
+    user_owns = models.ManyToManyField(CustomUser,
+                                       related_name='owns',
+                                       through='userDogPreference'
+                                       )
+
+
+class userDogPreference(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    dog = models.ForeignKey(dog, on_delete=models.CASCADE)
+    order = models.PositiveIntegerField()
+
+    class Meta:
+        ordering = ['order']

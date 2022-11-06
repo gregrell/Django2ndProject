@@ -42,10 +42,21 @@
 
         </div>
 
-        <div class="col-sm-3">
-            <h5>Piss Shit</h5>
-        </div>
 
+        <div class="col-sm-3">
+            <div class="sortable">
+                <div>piss</div>
+                <div>shit</div>
+            </div>
+
+            <div hx-get="{% url 'dogs-list' %}" hx-trigger="load" hx-target="#dogs_stuff">
+                {% include 'postitApp/HTMX/DogsSortableList.html' %}
+
+                <div id="dogs_stuff">
+
+                </div>
+            </div>
+        </div>
 
     </div>
 

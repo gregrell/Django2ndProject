@@ -25,8 +25,10 @@
             crossorigin="anonymous"></script>
 
     <!--    HTMX CSRF token logic -->
-       <script src="{% static 'js/htmx_csrftokenconfig.js' %}"></script>
+    <script src="{% static 'js/htmx_csrftokenconfig.js' %}"></script>
 
+    <!-- jsDelivr :: Sortable :: Latest (https://www.jsdelivr.com/package/npm/sortablejs) -->
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
 
 
     <link rel="stylesheet" href="{% static 'styles/style.css' %}"/>
@@ -49,7 +51,24 @@
         event.detail.headers['X-CSRFToken'] = '{{ csrf_token }}';
       })
 
+
+
+      htmx.onLoad(function(content) {
+        var sortables = content.querySelectorAll(".sortable");
+        for (var i = 0; i < sortables.length; i++) {
+            var sortable = sortables[i];
+            new Sortable(sortable, {
+            animation: 150,
+            ghostClass: 'blue-background-class'
+        });
+        }
+      })
+
     </script>
+
+ <!--    HTMX Sortable logic -->
+
+
 {% include 'NavBar.html' %}
 
 

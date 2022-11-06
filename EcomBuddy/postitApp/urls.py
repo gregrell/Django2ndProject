@@ -27,7 +27,8 @@ htmxpatterns = [
     path('check_username/', views.checkUsername, name='check-username'),
     path('createnoimagepost/', views.createnoimagepost, name='createnoimagepost'),
     path('deletepost <int:pk>/', views.deletepost, name='deletepost'),
-    path('searchuser/', views.searchuser, name='search-user')
+    path('searchuser/', views.searchuser, name='search-user'),
+    path('dogsList/', views.dogsList, name='dogs-list')
 
 ]
 

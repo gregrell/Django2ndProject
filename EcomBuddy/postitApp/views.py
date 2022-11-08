@@ -306,9 +306,7 @@ def likePost(request, post_id):
 def htmxPlay(request):
     form = CustomUserCreationForm()
     posts = request.user.posts.all()
-    dogs = userDogPreference.objects.filter(user=request.user)
-    print(dogs)
-    context = {'form': form, 'posts': posts, 'dogs': dogs}
+    context = {'form': form, 'posts': posts}
     return render(request, 'postitApp/HTMX/htmx_play.html', context)
 
 
@@ -325,6 +323,8 @@ def checkUsername(request):
 
 
 """ htmx create a non image user post """
+
+
 @login_required()
 @require_http_methods(['POST'])
 def createnoimagepost(request):
@@ -333,6 +333,10 @@ def createnoimagepost(request):
     request.user.posts.add(post)
     posts = request.user.posts.all()
     return render(request, 'postitApp/HTMX/user_posts.html', {'posts': posts})
+
+
+""" htmx delete a non image user post """
+
 
 @login_required()
 @require_http_methods(['DELETE'])
@@ -359,17 +363,26 @@ def searchuser(request):
                                                                                'searchbool': searchbool})
 
 
-""" Movies List - filtered by movies that don't exist in the user's movies """
+""" Dogs List - filtered by dogs that don't exist in the user's preferred dogs """
 
 
 def dogsList(request):
-    return render(request, 'postitApp/HTMX/DogsSortedList.html', {})
+    dogs = dog.objects.filter(user_owns=request.user)
+    return render(request, 'postitApp/HTMX/DogsSortedList.html', {'dogs': dogs})
 
 
 def dogsNotPreferredList(request):
     not_preferred = dog.objects.exclude(user_owns=request.user)
     context = {'not_preferred': not_preferred}
     return render(request, 'postitApp/HTMX/DogsNotPreferred.html', context)
+
+
+def addDog(request, pk):
+    dog_instance = dog.objects.get(id=pk)
+    print(dog_instance)
+    if not userDogPreference.objects.filter(user=request.user, dog=dog_instance).exists():
+        userDogPreference.objects.create(user=request.user, dog=dog_instance, order=1)
+    return dogsList(request)
 
 
 """ ***************************** """

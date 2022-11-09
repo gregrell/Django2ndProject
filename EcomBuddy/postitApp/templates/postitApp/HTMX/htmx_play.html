@@ -47,7 +47,9 @@
             <h5>Order Stuff</h5>
 
 
-            <div hx-get="{% url 'dogs-list' %}" hx-trigger="load" hx-target="#dogs_stuff">
+            <div hx-get="{% url 'dogs-list' %}"
+                 hx-trigger="load"
+                 hx-target="#dogs_stuff">
                 {% include 'postitApp/HTMX/DogsSortableList.html' %}
 
                 <div id="dogs_stuff">
@@ -59,10 +61,12 @@
 
         <div class="col-sm-2">
             <h5>Dogs not preferred</h5>
-            <div hx-get="{% url 'dogs-notpreferred-list' %}" hx-trigger="load" hx-target="#dogs_not_preferred_list">
-                <div id="dogs_not_preferred_list">
-<!--                    This section loaded by HTMX call-->
-                </div>
+            <div hx-get="{% url 'dogs-notpreferred-list' %}"
+                 hx-trigger="load, added_dog from:body"
+                 hx-target="#dogs_not_preferred_list">
+                <ul id="dogs_not_preferred_list">
+                    <!--                    This section loaded by HTMX call-->
+                </ul>
             </div>
 
         </div>

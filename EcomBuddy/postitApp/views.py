@@ -1,6 +1,6 @@
 import random
 
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from .models import UserPost, UserImage, CustomUser, UserFollowing, LikesTable, dog, userDogPreference
 from .forms import PostForm, CustomUserCreationForm, CustomUserChangeForm
@@ -16,6 +16,9 @@ from django.db.models import Q
 
 from django.template.defaulttags import register
 from django.http import HttpResponse
+
+# HTMX Imports
+from django_htmx.http import trigger_client_event
 
 
 # Create your views here.
@@ -378,11 +381,12 @@ def dogsNotPreferredList(request):
 
 
 def addDog(request, pk):
-    dog_instance = dog.objects.get(id=pk)
-    print(dog_instance)
+    dog_instance = get_object_or_404(dog, id=pk)
     if not userDogPreference.objects.filter(user=request.user, dog=dog_instance).exists():
         userDogPreference.objects.create(user=request.user, dog=dog_instance, order=1)
-    return dogsList(request)
+    response = dogsList(request)
+    trigger_client_event(response, 'added_dog', {})
+    return response
 
 
 """ ***************************** """

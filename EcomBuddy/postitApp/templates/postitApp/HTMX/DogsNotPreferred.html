@@ -1,12 +1,11 @@
 {% for dog in not_preferred %}
-<div>
 
+<div>
     {{dog.name}}
     <span class="badge bg-primary" style="cursor: pointer;"
           hx-post="{% url 'add-dog' dog.id %}"
           hx-trigger="click"
           hx-target="#dogs_stuff">Add</span>
 </div>
-
 <br>
 {% endfor %}

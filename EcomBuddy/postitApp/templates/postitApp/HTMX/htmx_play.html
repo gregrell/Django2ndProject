@@ -53,21 +53,27 @@
                 {% include 'postitApp/HTMX/DogsSortableList.html' %}
 
                 <div id="dogs_stuff">
-<!--                    This section loaded by HTMX call-->
+                    <!--                    This section loaded by HTMX call-->
 
                 </div>
             </div>
+            <button class="btn btn-primary btn-sm"
+                    hx-post="{% url 'delete-all-dogs' %}"
+                    hx-target="#dogs_stuff"
+                    >delete all</button>
+
         </div>
 
         <div class="col-sm-2">
             <h5>Dogs not preferred</h5>
             <div hx-get="{% url 'dogs-notpreferred-list' %}"
-                 hx-trigger="load, added_dog from:body"
+                 hx-trigger="load, edited_dog_list from:body"
                  hx-target="#dogs_not_preferred_list">
                 <ul id="dogs_not_preferred_list">
                     <!--                    This section loaded by HTMX call-->
                 </ul>
             </div>
+
 
         </div>
 

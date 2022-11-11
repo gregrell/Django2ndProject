@@ -385,7 +385,14 @@ def addDog(request, pk):
     if not userDogPreference.objects.filter(user=request.user, dog=dog_instance).exists():
         userDogPreference.objects.create(user=request.user, dog=dog_instance, order=1)
     response = dogsList(request)
-    trigger_client_event(response, 'added_dog', {})
+    trigger_client_event(response, 'edited_dog_list', {})
+    return response
+
+
+def deleteAllDogs(request):
+    userDogPreference.objects.all().delete()
+    response = dogsList(request)
+    trigger_client_event(response, 'edited_dog_list', {})
     return response
 
 

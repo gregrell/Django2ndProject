@@ -67,6 +67,53 @@ def delete_post(request, pk):
     return redirect('index')
 
 
+def queryUserPostFeed(request):
+    """return the last fifty posts of the users that the request user follows
+          and return to the context object name"""
+    user = request.user
+    following = user.following.filter(user=user)
+    """Build list of users for query filter"""
+    users = []
+    for u in following:
+        users.append(u.following)
+    """Create query object and build it at runtime"""
+
+    if len(users) is not 0:
+        query = Q()
+        for name in users:
+            query = query | Q(user=name)
+        """Chain and filter results"""
+        posts = UserPost.objects.filter(query).order_by('-publish_date')[:50]
+    else:
+        posts = None
+    return posts
+
+
+def generateNotFollowingList(user):
+    """ Generate a random set of people that are not followed for the suggested users to follow
+           do this by getting all users as list, then getting all followed users, convert them to a set
+           then do set subtraction operation, convert the result to a list, and use random to pick 5 from that list
+           if the set size is less than 10 users, this is handled by sample_size one line conditional"""
+    all_user_id_list = list(CustomUser.objects.all().values_list('id', flat=True))
+    followed_user_id_list = list(UserFollowing.objects.filter(user=user).values_list('following',
+                                                                                     flat=True))
+    all_user_not_followed_id_set = set(all_user_id_list) - set(followed_user_id_list)
+    all_user_not_followed_id_list = list(all_user_not_followed_id_set)
+    sample_size = len(all_user_not_followed_id_list) if len(all_user_not_followed_id_list) < 5 else 5
+    suggested_unfollowed_users_list = random.sample(all_user_not_followed_id_list, sample_size)
+
+    context_dict = {}
+    context_dict['not_following'] = CustomUser.objects.filter(pk__in=suggested_unfollowed_users_list)
+    u_list = context_dict.get('not_following')
+    fq = {}  # following query dictionary creation for showing the number of followers that an unfollowed user has
+    """ Create the following query dictionary for all the suggested users """
+    for u in u_list:
+        following_query = UserFollowing.objects.filter(following=u)
+        fq[u.username] = following_query
+    context_dict['fq'] = fq  # add the feature query dictionary to the context data dictionary
+    return context_dict
+
+
 # Class based views:
 
 class indexView(LoginRequiredMixin, ListView):
@@ -78,24 +125,7 @@ class indexView(LoginRequiredMixin, ListView):
     template_name = 'postitApp/index.html'
 
     def get_queryset(self):
-        """return the last fifty posts of the users that the request user follows
-        and return to the context object name"""
-        user = self.request.user
-        following = user.following.filter(user=user)
-        """Build list of users for query filter"""
-        users = []
-        for u in following:
-            users.append(u.following)
-        """Create query object and build it at runtime"""
-
-        if len(users) is not 0:
-            query = Q()
-            for name in users:
-                query = query | Q(user=name)
-            """Chain and filter results"""
-            posts = UserPost.objects.filter(query).order_by('-publish_date')[:50]
-        else:
-            posts = None
+        posts = queryUserPostFeed(self.request)
         return posts
 
     def get_context_data(self, **kwargs):
@@ -103,29 +133,9 @@ class indexView(LoginRequiredMixin, ListView):
         the super class get_context_data to get the 'user_posts' context as queried above in get_queryset
         this is returned as a dict. Then add additional items as needed to the dict before returning it"""
         cd = super(indexView, self).get_context_data(**kwargs)
-
-        """ Generate a random set of people that are not followed for the suggested users to follow 
-        do this by getting all users as list, then getting all followed users, convert them to a set
-        then do set subtraction operation, convert the result to a list, and use random to pick 5 from that list
-        if the set size is less than 10 users, this is handled by sample_size one line conditional"""
-
-        all_user_id_list = list(CustomUser.objects.all().values_list('id', flat=True))
-        followed_user_id_list = list(UserFollowing.objects.filter(user=self.request.user).values_list('following',
-                                                                                                      flat=True))
-        all_user_not_followed_id_set = set(all_user_id_list) - set(followed_user_id_list)
-        all_user_not_followed_id_list = list(all_user_not_followed_id_set)
-        sample_size = len(all_user_not_followed_id_list) if len(all_user_not_followed_id_list) < 5 else 5
-        suggested_unfollowed_users_list = random.sample(all_user_not_followed_id_list, sample_size)
-
-        cd['not_following'] = CustomUser.objects.filter(pk__in=suggested_unfollowed_users_list)
-        u_list = cd.get('not_following')
-        fq = {}  # following query dictionary creation for showing the number of followers that an unfollowed user has
-        """ Create the following query dictionary for all the suggested users """
-        for u in u_list:
-            following_query = UserFollowing.objects.filter(following=u)
-            fq[u.username] = following_query
-        cd['fq'] = fq  # add the feature query dictionary to the context data dictionary
-
+        not_following = generateNotFollowingList(self.request.user)
+        cd['not_following'] = not_following.get('not_following')
+        cd['fq'] = not_following.get('fq')  # add the feature query dictionary to the context data dictionary
         """ Get the likes and comments for each post. Place this in context data. """
         lq = {}
         request_user_liked_post = {}

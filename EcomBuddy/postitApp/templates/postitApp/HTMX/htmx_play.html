@@ -8,7 +8,7 @@
     <h1>HTMX PLAY</h1>
 
     <div class="row content">
-        <div class="col-sm-3">
+        <div class="col-sm-2">
             <form method="POST" action="#" autocomplete="off">
                 {%csrf_token%}
 
@@ -64,7 +64,7 @@
 
         </div>
 
-        <div class="col-sm-2">
+        <div class="col-sm-4">
             <h5>Dogs not preferred</h5>
             <div hx-get="{% url 'dogs-notpreferred-list' %}"
                  hx-trigger="load, edited_dog_list from:body"
@@ -74,7 +74,10 @@
                 </ul>
             </div>
 
-
+            <h5>Suggested Users</h5>
+            <div hx-get="{%url 'suggested-users' %}"
+                 hx-trigger="load"
+                 ></div>
         </div>
 
     </div>

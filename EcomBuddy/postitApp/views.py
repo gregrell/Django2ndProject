@@ -89,14 +89,14 @@ def queryUserPostFeed(request):
     return posts
 
 
-def generateNotFollowingList(user):
+def generateNotFollowingList(request):
     """ Generate a random set of people that are not followed for the suggested users to follow
            do this by getting all users as list, then getting all followed users, convert them to a set
            then do set subtraction operation, convert the result to a list, and use random to pick 5 from that list
            if the set size is less than 10 users, this is handled by sample_size one line conditional"""
     all_user_id_list = list(CustomUser.objects.all().values_list('id', flat=True))
-    followed_user_id_list = list(UserFollowing.objects.filter(user=user).values_list('following',
-                                                                                     flat=True))
+    followed_user_id_list = list(UserFollowing.objects.filter(user=request.user).values_list('following',
+                                                                                             flat=True))
     all_user_not_followed_id_set = set(all_user_id_list) - set(followed_user_id_list)
     all_user_not_followed_id_list = list(all_user_not_followed_id_set)
     sample_size = len(all_user_not_followed_id_list) if len(all_user_not_followed_id_list) < 5 else 5
@@ -133,7 +133,7 @@ class indexView(LoginRequiredMixin, ListView):
         the super class get_context_data to get the 'user_posts' context as queried above in get_queryset
         this is returned as a dict. Then add additional items as needed to the dict before returning it"""
         cd = super(indexView, self).get_context_data(**kwargs)
-        not_following = generateNotFollowingList(self.request.user)
+        not_following = generateNotFollowingList(self.request)
         cd['not_following'] = not_following.get('not_following')
         cd['fq'] = not_following.get('fq')  # add the feature query dictionary to the context data dictionary
         """ Get the likes and comments for each post. Place this in context data. """
@@ -404,6 +404,11 @@ def deleteAllDogs(request):
     response = dogsList(request)
     trigger_client_event(response, 'edited_dog_list', {})
     return response
+
+
+def suggestedUsers(request):
+    context = generateNotFollowingList(request)
+    return render(request, 'postitApp/suggested_following.html', context)
 
 
 """ ***************************** """

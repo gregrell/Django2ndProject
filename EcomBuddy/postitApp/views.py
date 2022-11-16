@@ -89,17 +89,21 @@ def queryUserPostFeed(request):
     return posts
 
 
-def generateNotFollowingList(request):
+def generateNotFollowingList(request, number_results):
     """ Generate a random set of people that are not followed for the suggested users to follow
            do this by getting all users as list, then getting all followed users, convert them to a set
            then do set subtraction operation, convert the result to a list, and use random to pick 5 from that list
            if the set size is less than 10 users, this is handled by sample_size one line conditional"""
+    if not number_results:
+        number_results = 5
+
     all_user_id_list = list(CustomUser.objects.all().values_list('id', flat=True))
     followed_user_id_list = list(UserFollowing.objects.filter(user=request.user).values_list('following',
                                                                                              flat=True))
     all_user_not_followed_id_set = set(all_user_id_list) - set(followed_user_id_list)
     all_user_not_followed_id_list = list(all_user_not_followed_id_set)
-    sample_size = len(all_user_not_followed_id_list) if len(all_user_not_followed_id_list) < 5 else 5
+    sample_size = len(all_user_not_followed_id_list) if len(
+        all_user_not_followed_id_list) < number_results else number_results
     suggested_unfollowed_users_list = random.sample(all_user_not_followed_id_list, sample_size)
 
     context_dict = {}
@@ -133,7 +137,7 @@ class indexView(LoginRequiredMixin, ListView):
         the super class get_context_data to get the 'user_posts' context as queried above in get_queryset
         this is returned as a dict. Then add additional items as needed to the dict before returning it"""
         cd = super(indexView, self).get_context_data(**kwargs)
-        not_following = generateNotFollowingList(self.request)
+        not_following = generateNotFollowingList(self.request, 5)
         cd['not_following'] = not_following.get('not_following')
         cd['fq'] = not_following.get('fq')  # add the feature query dictionary to the context data dictionary
         """ Get the likes and comments for each post. Place this in context data. """
@@ -290,7 +294,7 @@ def followUser(request, pk):
         relationship = UserFollowing(user=requesting_user, following=followed_user)
         relationship.save()
 
-    return redirect('index')
+    return HttpResponse('')
 
 
 """ This method called if the user performs a like on a post. Check to see if like exists, 
@@ -406,9 +410,21 @@ def deleteAllDogs(request):
     return response
 
 
-def suggestedUsers(request):
-    context = generateNotFollowingList(request)
+def suggestedUsers(request, number_results):
+    context = generateNotFollowingList(request, number_results=number_results)
+
     return render(request, 'postitApp/suggested_following.html', context)
+
+
+def followAndGetNewSuggestedUser(request, pk):
+    context = generateNotFollowingList(request, number_results=1)
+    print(context)
+
+    single_user = {}
+    single_user['u'] = context.pop('not_following').first()
+    single_user['fq'] = context.pop('fq')
+    print(single_user)
+    return render(request, 'postitApp/HTMX/Partials/suggested_user.html', single_user)
 
 
 """ ***************************** """

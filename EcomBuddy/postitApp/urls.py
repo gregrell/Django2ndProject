@@ -32,7 +32,9 @@ htmxpatterns = [
     path('dogsNotPreferredList/', views.dogsNotPreferredList, name='dogs-notpreferred-list'),
     path('addDog <str:pk>/', views.addDog, name='add-dog'),
     path('deletealldogs/', views.deleteAllDogs, name='delete-all-dogs'),
-    path('suggestedusers/', views.suggestedUsers, name='suggested-users')
+    path('suggestedusers <int:number_results>/', views.suggestedUsers, name='suggested-users'),
+    path('followandgetnewsuggesteduser <str:pk>/', views.followAndGetNewSuggestedUser,
+         name='follow-and-get-new-suggested-user')
 
 ]
 

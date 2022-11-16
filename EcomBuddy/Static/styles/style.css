@@ -2,6 +2,11 @@ p{font-size: 0.9rem;}
 a{ color: inherit; }
 
 
+.slowswap {
+    opacity: 0.2;
+    transition: opacity 3s;
+}
+
 .avatar {
   position: relative;
   display: inline-block;

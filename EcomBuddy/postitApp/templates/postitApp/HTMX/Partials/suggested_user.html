@@ -2,7 +2,7 @@
 
 
 
-<div id="unfollowed_user" class="row fade-in">
+<div id="unfollowed_user{{u.id}}" class="row fade-in">
     <div class="col-sm-2">
         <div class="avatar avatar--small active">
             <a href="#" tabindex="0" role="button" data-bs-toggle="popover" data-bs-trigger="focus"
@@ -36,7 +36,7 @@
         <a href="#"
            hx-get="{%url 'follow-and-get-new-suggested-user' u.id %}"
            hx-trigger="click"
-           hx-target="#unfollowed_user"
+           hx-target="#unfollowed_user{{u.id}}"
            hx-swap="innerHTML settle:0.5s"
            style="color:#2349fa; text-decoration: none"><p><small>Follow</small></p></a>
     </div>

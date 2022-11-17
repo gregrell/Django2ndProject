@@ -143,16 +143,17 @@ class indexView(LoginRequiredMixin, ListView):
         """ Get the likes and comments for each post. Place this in context data. """
         lq = {}
         request_user_liked_post = {}
-        for post in cd.get('user_posts'):
-            likes_query = LikesTable.objects.filter(post=post)
-            lq[post] = likes_query
-            users_who_liked_post = likes_query.values('user_id')
-            for user in users_who_liked_post:
-                if self.request.user.id in user.values():
-                    request_user_liked_post[post] = True
-        cd['lq'] = lq
-        cd['request_user_liked_post'] = request_user_liked_post
-        print(cd.get('request_user_liked_post'))
+        if not cd.get('user_posts') is None:
+            for post in cd.get('user_posts'):
+                likes_query = LikesTable.objects.filter(post=post)
+                lq[post] = likes_query
+                users_who_liked_post = likes_query.values('user_id')
+                for user in users_who_liked_post:
+                    if self.request.user.id in user.values():
+                        request_user_liked_post[post] = True
+            cd['lq'] = lq
+            cd['request_user_liked_post'] = request_user_liked_post
+            print(cd.get('request_user_liked_post'))
 
         return cd
 
@@ -418,12 +419,10 @@ def suggestedUsers(request, number_results):
 
 def followAndGetNewSuggestedUser(request, pk):
     context = generateNotFollowingList(request, number_results=1)
-    print(context)
-
     single_user = {}
     single_user['u'] = context.pop('not_following').first()
     single_user['fq'] = context.pop('fq')
-    print(single_user)
+    response = followUser(request, pk)
     return render(request, 'postitApp/HTMX/Partials/suggested_user.html', single_user)
 
 

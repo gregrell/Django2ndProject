@@ -23,7 +23,7 @@ class CustomUser(AbstractUser):
     avatar = models.ImageField(upload_to=user_directory_path, null=True, default="avatar.svg")
     updated = models.DateTimeField(auto_now=True)
     created = models.DateTimeField(auto_now_add=True)
-    # username (super)
+    # username (super) #TODO restrict size of user name to 9 characters
     # firstname (super)
     # lastname (super)
 

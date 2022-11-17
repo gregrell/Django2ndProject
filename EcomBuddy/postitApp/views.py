@@ -418,12 +418,15 @@ def suggestedUsers(request, number_results):
 
 
 def followAndGetNewSuggestedUser(request, pk):
+    response = followUser(request, pk)
     context = generateNotFollowingList(request, number_results=1)
     single_user = {}
     single_user['u'] = context.pop('not_following').first()
     single_user['fq'] = context.pop('fq')
-    response = followUser(request, pk)
     return render(request, 'postitApp/HTMX/Partials/suggested_user.html', single_user)
+
+
+# TODO 2 problems: 1 styling shrinks the column on the last users to select, and when the very last user is selected, an error is thrown and nothing new is returned
 
 
 """ ***************************** """

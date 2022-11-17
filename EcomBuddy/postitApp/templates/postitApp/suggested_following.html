@@ -7,11 +7,19 @@
     <p>Suggested</p>
 </div>
 
+
 {% for u in not_following%}
 
 <div id="unfollowed_list" class="container-sm" style="padding: 1px">
     {% include 'postitApp/HTMX/Partials/suggested_user.html' %}
 </div>
+
+{% empty %}
+
+<div class="container-sm" style="padding: 1px"><small>No users</small></div>
+
 {% endfor %}
 
+
 </body>
+

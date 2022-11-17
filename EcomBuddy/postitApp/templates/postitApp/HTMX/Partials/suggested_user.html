@@ -1,7 +1,10 @@
 {% load static %}
 
 
+{% if not u %}
+no suggested users
 
+{% else %}
 <div id="unfollowed_user{{u.id}}" class="row fade-in">
     <div class="col-sm-2">
         <div class="avatar avatar--small active">
@@ -37,7 +40,7 @@
            hx-get="{%url 'follow-and-get-new-suggested-user' u.id %}"
            hx-trigger="click"
            hx-target="#unfollowed_user{{u.id}}"
-           hx-swap="innerHTML settle:0.5s"
+           hx-swap="outerHTML settle:0.5s"
            style="color:#2349fa; text-decoration: none"><p><small>Follow</small></p></a>
     </div>
 </div>
@@ -47,3 +50,4 @@
 <!--Call the popup script that is canned with bootstrap-->
 <script src="{% static 'js/popover.js' %}"></script>
 
+{% endif %}

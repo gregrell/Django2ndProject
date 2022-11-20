@@ -342,7 +342,6 @@ def likePost(request, post_id):
 
     cd = {'lq': (queryIfUserLikedPost(request, queryset))[0],
           'request_user_liked_post': (queryIfUserLikedPost(request, queryset))[1], 'post': post_instance}
-    print(cd)
 
     return render(request, 'postitApp/HTMX/Partials/like_fire_icon.html', cd)
 

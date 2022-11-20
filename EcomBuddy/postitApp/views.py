@@ -89,14 +89,11 @@ def queryUserPostFeed(request):
     return posts
 
 
-def generateNotFollowingList(request, number_results):
-    """ Generate a random set of people that are not followed for the suggested users to follow
-           do this by getting all users as list, then getting all followed users, convert them to a set
-           then do set subtraction operation, convert the result to a list, and use random to pick 5 from that list
-           if the set size is less than 10 users, this is handled by sample_size one line conditional"""
-    if not number_results:
-        number_results = 5
-
+@login_required()
+def generateNotFollowingPool(request):
+    """ Generate a pool of unfollowed users for creating dynamic suggested following list. Store
+     on session object """
+    number_results = 10
     all_user_id_list = list(CustomUser.objects.all().values_list('id', flat=True))
     followed_user_id_list = list(UserFollowing.objects.filter(user=request.user).values_list('following',
                                                                                              flat=True))
@@ -105,6 +102,27 @@ def generateNotFollowingList(request, number_results):
     sample_size = len(all_user_not_followed_id_list) if len(
         all_user_not_followed_id_list) < number_results else number_results
     suggested_unfollowed_users_list = random.sample(all_user_not_followed_id_list, sample_size)
+
+    request.session['unfollowed_pool'] = suggested_unfollowed_users_list
+    return None
+
+
+@login_required()
+def generateNotFollowingList(request, number_results):
+    """ Generate a random set of people that are not followed for the suggested users to follow
+           do this by getting all users as list, then getting all followed users, convert them to a set
+           then do set subtraction operation, convert the result to a list, and use random to pick 5 from that list
+           if the set size is less than 10 users, this is handled by sample_size one line conditional"""
+    if not number_results:
+        number_results = 5
+
+    unfollowed_pool = request.session.get('unfollowed_pool')
+    number_results = len(unfollowed_pool) if len(unfollowed_pool) < number_results else number_results
+    suggested_unfollowed_users_list, unfollowed_pool_remaining = unfollowed_pool[:number_results], unfollowed_pool[
+                                                                                                   number_results:]
+    request.session['unfollowed_pool'] = unfollowed_pool_remaining
+    print(suggested_unfollowed_users_list)
+    print(unfollowed_pool_remaining)
 
     context_dict = {}
     context_dict['not_following'] = CustomUser.objects.filter(pk__in=suggested_unfollowed_users_list)
@@ -136,6 +154,7 @@ class indexView(LoginRequiredMixin, ListView):
         """ need to have multiple queries beyond the get_queryset call. Construct a dictionary and call
         the super class get_context_data to get the 'user_posts' context as queried above in get_queryset
         this is returned as a dict. Then add additional items as needed to the dict before returning it"""
+        generateNotFollowingPool(self.request)
         cd = super(indexView, self).get_context_data(**kwargs)
         not_following = generateNotFollowingList(self.request, 5)
         cd['not_following'] = not_following.get('not_following')
@@ -170,7 +189,6 @@ class newPost(LoginRequiredMixin, CreateView):
     # model = UserPost
     form_class = PostForm
     # fields = ['caption']
-
 
 class deletePost(LoginRequiredMixin, DeleteView):
     login_url = 'login'
@@ -430,3 +448,8 @@ def followAndGetNewSuggestedUser(request, pk):
 
 
 """ ***************************** """
+
+
+def myPersist():
+    pass
+    return None

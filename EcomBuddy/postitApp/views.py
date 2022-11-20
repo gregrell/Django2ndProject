@@ -93,7 +93,7 @@ def queryUserPostFeed(request):
 def generateNotFollowingPool(request):
     """ Generate a pool of unfollowed users for creating dynamic suggested following list. Store
      on session object """
-    number_results = 10
+    number_results = 50
     all_user_id_list = list(CustomUser.objects.all().values_list('id', flat=True))
     followed_user_id_list = list(UserFollowing.objects.filter(user=request.user).values_list('following',
                                                                                              flat=True))
@@ -444,12 +444,5 @@ def followAndGetNewSuggestedUser(request, pk):
     return render(request, 'postitApp/HTMX/Partials/suggested_user.html', single_user)
 
 
-# TODO 2 problems: 1 styling shrinks the column on the last users to select, and when the very last user is selected, an error is thrown and nothing new is returned
-
 
 """ ***************************** """
-
-
-def myPersist():
-    pass
-    return None

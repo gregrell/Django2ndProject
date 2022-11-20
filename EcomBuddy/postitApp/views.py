@@ -121,11 +121,8 @@ def generateNotFollowingList(request, number_results):
     suggested_unfollowed_users_list, unfollowed_pool_remaining = unfollowed_pool[:number_results], unfollowed_pool[
                                                                                                    number_results:]
     request.session['unfollowed_pool'] = unfollowed_pool_remaining
-    print(suggested_unfollowed_users_list)
-    print(unfollowed_pool_remaining)
 
-    context_dict = {}
-    context_dict['not_following'] = CustomUser.objects.filter(pk__in=suggested_unfollowed_users_list)
+    context_dict = {'not_following': CustomUser.objects.filter(pk__in=suggested_unfollowed_users_list)}
     u_list = context_dict.get('not_following')
     fq = {}  # following query dictionary creation for showing the number of followers that an unfollowed user has
     """ Create the following query dictionary for all the suggested users """
@@ -136,9 +133,25 @@ def generateNotFollowingList(request, number_results):
     return context_dict
 
 
+@login_required()
+def queryIfUserLikedPost(request, posts):
+    lq = {}
+    request_user_liked_post = {}
+    if not posts is None:
+        for post in posts:
+            likes_query = LikesTable.objects.filter(post=post)
+            lq[post] = likes_query
+            users_who_liked_post = likes_query.values('user_id')
+            for user in users_who_liked_post:
+                if request.user.id in user.values():
+                    request_user_liked_post[post] = True
+
+    return lq, request_user_liked_post
+
+
 # Class based views:
 
-class indexView(LoginRequiredMixin, ListView):
+class IndexView(LoginRequiredMixin, ListView):
     # model = UserPost
     login_url = 'login'
     redirect_field_name = 'redirect_to'
@@ -155,7 +168,7 @@ class indexView(LoginRequiredMixin, ListView):
         the super class get_context_data to get the 'user_posts' context as queried above in get_queryset
         this is returned as a dict. Then add additional items as needed to the dict before returning it"""
         generateNotFollowingPool(self.request)
-        cd = super(indexView, self).get_context_data(**kwargs)
+        cd = super(IndexView, self).get_context_data(**kwargs)
         not_following = generateNotFollowingList(self.request, 5)
         cd['not_following'] = not_following.get('not_following')
         cd['fq'] = not_following.get('fq')  # add the feature query dictionary to the context data dictionary
@@ -163,17 +176,7 @@ class indexView(LoginRequiredMixin, ListView):
         lq = {}
         request_user_liked_post = {}
         if not cd.get('user_posts') is None:
-            for post in cd.get('user_posts'):
-                likes_query = LikesTable.objects.filter(post=post)
-                lq[post] = likes_query
-                users_who_liked_post = likes_query.values('user_id')
-                for user in users_who_liked_post:
-                    if self.request.user.id in user.values():
-                        request_user_liked_post[post] = True
-            cd['lq'] = lq
-            cd['request_user_liked_post'] = request_user_liked_post
-            print(cd.get('request_user_liked_post'))
-
+            cd['lq'], cd['request_user_liked_post'] = queryIfUserLikedPost(self.request, cd.get('user_posts'))
         return cd
 
 
@@ -182,7 +185,7 @@ def get_item(dictionary, key):
     return dictionary.get(key)
 
 
-class newPost(LoginRequiredMixin, CreateView):
+class NewPost(LoginRequiredMixin, CreateView):
     login_url = 'login'
     redirect_field_name = 'redirect_to'
     template_name = 'postitApp/new_post.html'
@@ -190,7 +193,8 @@ class newPost(LoginRequiredMixin, CreateView):
     form_class = PostForm
     # fields = ['caption']
 
-class deletePost(LoginRequiredMixin, DeleteView):
+
+class DeletePost(LoginRequiredMixin, DeleteView):
     login_url = 'login'
     redirect_field_name = 'redirect_to'
     model = UserPost
@@ -333,10 +337,18 @@ def likePost(request, post_id):
     else:
         """ Unlike the post by deleting the existing database instance """
         existing_like.delete()
-    return redirect('index')
+
+    queryset = UserPost.objects.order_by('-publish_date')
+
+    cd = {'lq': (queryIfUserLikedPost(request, queryset))[0],
+          'request_user_liked_post': (queryIfUserLikedPost(request, queryset))[1], 'post': post_instance}
+    print(cd)
+
+    return render(request, 'postitApp/HTMX/Partials/like_fire_icon.html', cd)
 
 
 """ HTMX Playground """
+
 
 @login_required()
 def htmxPlay(request):
@@ -347,6 +359,7 @@ def htmxPlay(request):
 
 
 """ htmx called method to determine if a user email exists """
+
 
 @login_required()
 @require_http_methods(['POST'])
@@ -384,7 +397,9 @@ def deletepost(request, pk):
     posts = request.user.posts.all()
     return render(request, 'postitApp/HTMX/user_posts.html', {'posts': posts})
 
+
 """ Dynamic Searchbar for User Search """
+
 
 @login_required()
 def searchuser(request):
@@ -438,11 +453,8 @@ def suggestedUsers(request, number_results):
 def followAndGetNewSuggestedUser(request, pk):
     response = followUser(request, pk)
     context = generateNotFollowingList(request, number_results=1)
-    single_user = {}
-    single_user['u'] = context.pop('not_following').first()
-    single_user['fq'] = context.pop('fq')
+    single_user = {'u': context.pop('not_following').first(), 'fq': context.pop('fq')}
     return render(request, 'postitApp/HTMX/Partials/suggested_user.html', single_user)
-
 
 
 """ ***************************** """

@@ -132,6 +132,10 @@ def generateNotFollowingList(request, number_results):
     context_dict['fq'] = fq  # add the feature query dictionary to the context data dictionary
     return context_dict
 
+@login_required()
+def likesQuery(request, post):
+    likes_query = LikesTable.objects.filter(post=post)
+    return likes_query
 
 @login_required()
 def queryIfUserLikedPost(request, posts):
@@ -139,7 +143,7 @@ def queryIfUserLikedPost(request, posts):
     request_user_liked_post = {}
     if not posts is None:
         for post in posts:
-            likes_query = LikesTable.objects.filter(post=post)
+            likes_query = likesQuery(request, post)
             lq[post] = likes_query
             users_who_liked_post = likes_query.values('user_id')
             for user in users_who_liked_post:
@@ -173,10 +177,10 @@ class IndexView(LoginRequiredMixin, ListView):
         cd['not_following'] = not_following.get('not_following')
         cd['fq'] = not_following.get('fq')  # add the feature query dictionary to the context data dictionary
         """ Get the likes and comments for each post. Place this in context data. """
-        lq = {}
-        request_user_liked_post = {}
+
         if not cd.get('user_posts') is None:
             cd['lq'], cd['request_user_liked_post'] = queryIfUserLikedPost(self.request, cd.get('user_posts'))
+        print(cd)
         return cd
 
 
@@ -454,6 +458,14 @@ def followAndGetNewSuggestedUser(request, pk):
     context = generateNotFollowingList(request, number_results=1)
     single_user = {'u': context.pop('not_following').first(), 'fq': context.pop('fq')}
     return render(request, 'postitApp/HTMX/Partials/suggested_user.html', single_user)
+
+
+def updateLikesDisplayed(request, post_id):
+    post = UserPost.objects.get(id=post_id)
+    t_dict = {post: likesQuery(request, post)}
+    context = {'lq': t_dict, 'post': post}
+    print(context)
+    return render(request, 'postitApp/HTMX/Partials/likes_count.html', context)
 
 
 """ ***************************** """

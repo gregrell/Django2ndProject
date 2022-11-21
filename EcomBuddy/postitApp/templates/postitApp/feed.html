@@ -82,10 +82,7 @@
                     </svg>
                 </a>
             </div>
-            <p class="text-muted">
-                <a href="#" style="text-decoration:none; color:inherit"><small>{{ lq|get_item:post|length }}
-                    Likes</small></a>
-            </p>
+                {% include 'postitApp/HTMX/Partials/likes_count.html' %}
             <p><b>{{post.user}}</b> {{post.caption}}</p>
             <a href="{% url 'delete-post' post.id %}" class="nav-link text-muted"><small>delete</small></a>
         </div>

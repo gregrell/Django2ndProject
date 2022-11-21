@@ -1,0 +1,11 @@
+<p id="likes_total_for"
+   class="text-muted"
+   hx-get="{% url 'get-likes-count' post.id %}"
+   hx-trigger="click"
+   hx-target="#likes_total_for"
+   hx-swap="outerHTML">
+    <a href="#" style="text-decoration:none; color:inherit">
+        <small>{{ lq|get_item:post|length }}
+            Likes</small></a>
+
+</p>

@@ -464,8 +464,7 @@ def updateLikesDisplayed(request, post_id):
     post = UserPost.objects.get(id=post_id)
     t_dict = {post: likesQuery(request, post)}
     context = {'lq': t_dict, 'post': post}
-    print(context)
     return render(request, 'postitApp/HTMX/Partials/likes_count.html', context)
-
+    # TODO refire this routine when someone likes the post
 
 """ ***************************** """

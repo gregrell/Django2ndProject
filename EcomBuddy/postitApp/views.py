@@ -347,7 +347,9 @@ def likePost(request, post_id):
     cd = {'lq': (queryIfUserLikedPost(request, queryset))[0],
           'request_user_liked_post': (queryIfUserLikedPost(request, queryset))[1], 'post': post_instance}
 
-    return render(request, 'postitApp/HTMX/Partials/like_fire_icon.html', cd)
+    response = render(request, 'postitApp/HTMX/Partials/like_fire_icon.html', cd)
+    trigger_client_event(response, 'updated_likes' + str(post_id), {})
+    return response
 
 
 """ HTMX Playground """
@@ -464,6 +466,7 @@ def updateLikesDisplayed(request, post_id):
     post = UserPost.objects.get(id=post_id)
     t_dict = {post: likesQuery(request, post)}
     context = {'lq': t_dict, 'post': post}
+    print(post_id)
     return render(request, 'postitApp/HTMX/Partials/likes_count.html', context)
     # TODO refire this routine when someone likes the post
 

@@ -180,7 +180,6 @@ class IndexView(LoginRequiredMixin, ListView):
 
         if not cd.get('user_posts') is None:
             cd['lq'], cd['request_user_liked_post'] = queryIfUserLikedPost(self.request, cd.get('user_posts'))
-        print(cd)
         return cd
 
 
@@ -466,8 +465,6 @@ def updateLikesDisplayed(request, post_id):
     post = UserPost.objects.get(id=post_id)
     t_dict = {post: likesQuery(request, post)}
     context = {'lq': t_dict, 'post': post}
-    print(post_id)
     return render(request, 'postitApp/HTMX/Partials/likes_count.html', context)
-    # TODO refire this routine when someone likes the post
 
 """ ***************************** """

@@ -1,7 +1,8 @@
 from django.forms import Form, ModelForm
-from .models import UserPost, UserImage, UserVideo, CustomUser
+from .models import UserPost, UserImage, UserVideo, CustomUser, Comment
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django import forms
+from emoji_picker.widgets import EmojiPickerTextInputAdmin, EmojiPickerTextareaAdmin
 
 
 class PostForm(ModelForm):
@@ -32,11 +33,16 @@ class CustomUserCreationForm(UserCreationForm):
         model = CustomUser
         fields = ("email", "password1", "password2")
 
-class CustomUserChangeForm(UserChangeForm):
 
+class CustomUserChangeForm(UserChangeForm):
     class Meta:
         model = CustomUser
-        fields = ['avatar','bio']
+        fields = ['avatar', 'bio']
 
 
+class YourModelForm(forms.ModelForm):
+    comment = forms.CharField(widget=EmojiPickerTextareaAdmin)
 
+    class Meta:
+        model = Comment
+        fields = ['comment']

@@ -98,6 +98,18 @@
       </div>
       {% include 'postitApp/HTMX/Partials/likes_count.html' %}
       <p><b>{{post.user}}</b> {{post.caption}}</p>
+
+      <div id="comments_section{{post.id}}">
+        <div hx-get="{% url 'get-comments-for-post' post.id %}"
+             hx-trigger="load"
+             hx-target="#comments{{post.id}}"
+             hx-swap="innerHTML"></div>
+        <div id="comments{{post.id}}">
+          {% include 'postitApp/HTMX/Partials/post_comments.html' %}
+        </div>
+      </div>
+
+
       <a href="{% url 'delete-post' post.id %}" class="nav-link text-muted"><small>delete</small></a>
     </div>
   </div>

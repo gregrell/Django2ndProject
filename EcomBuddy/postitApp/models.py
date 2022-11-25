@@ -90,3 +90,12 @@ class userDogPreference(models.Model):
 
     class Meta:
         ordering = ['order']
+
+
+class Comment(models.Model):
+    text = models.CharField(max_length=500)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True)
+    post = models.ForeignKey(UserPost, on_delete=models.CASCADE, related_name='comments',
+                             null=True)  # UserPost.comments.all()
+    edited = models.DateTimeField(auto_now=True)
+    created = models.DateTimeField(auto_now_add=True)

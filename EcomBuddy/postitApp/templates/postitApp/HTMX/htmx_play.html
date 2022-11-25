@@ -77,7 +77,24 @@
             <h5>Suggested Users</h5>
             <div hx-get="{%url 'suggested-users' 1 %}"
                  hx-trigger="load"
-                 ></div>
+            ></div>
+
+
+            <form method="POST" action="#" autocomplete="off">
+                {%csrf_token%}
+
+                <div class="form-group mb-1">
+                    <h5>Emoji Form</h5>
+                    {% block extrahead %}
+                    {{emoji_form}}
+
+                    {% endblock %}
+
+
+                </div>
+            </form>
+
+
         </div>
 
     </div>

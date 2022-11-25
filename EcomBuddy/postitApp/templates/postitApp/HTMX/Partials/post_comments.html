@@ -1,0 +1,11 @@
+<div>
+    <small class="text-muted">{{comments.count}} Comments</small>
+    <ul style="padding-left: 0px; margin: 0px;">
+        {% for comment in comments %}
+        <li style="list-style-type: none; padding: 0; margin: 0;">
+            <p><b>{{comment.user.username}}</b> {{comment.text}} <small
+                    class="text-muted">{{comment.edited|timesince}} ago</small></p>
+        </li>
+        {% endfor %}
+    </ul>
+</div>

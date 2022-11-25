@@ -35,7 +35,8 @@ htmxpatterns = [
     path('followandgetnewsuggesteduser <str:pk>/', views.followAndGetNewSuggestedUser,
          name='follow-and-get-new-suggested-user'),
     path('like_post <str:post_id> /', views.likePost, name='like-post'),
-    path('get_likes_count <str:post_id> /', views.updateLikesDisplayed, name='get-likes-count')
+    path('get_likes_count <str:post_id> /', views.updateLikesDisplayed, name='get-likes-count'),
+    path('get_comments_for_post <str:post_id> /', views.getCommentsForPost, name='get-comments-for-post')
 
 ]
 

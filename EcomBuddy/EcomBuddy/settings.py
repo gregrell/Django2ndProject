@@ -36,7 +36,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'postitApp.apps.PostitappConfig',
-    'widget_tweaks'
+    'widget_tweaks',
+    'emoji_picker'
 ]
 
 AUTH_USER_MODEL = 'postitApp.CustomUser'

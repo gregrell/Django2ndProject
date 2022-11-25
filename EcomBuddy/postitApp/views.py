@@ -3,7 +3,7 @@ import random
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from .models import UserPost, UserImage, CustomUser, UserFollowing, LikesTable, dog, userDogPreference
-from .forms import PostForm, CustomUserCreationForm, CustomUserChangeForm
+from .forms import PostForm, CustomUserCreationForm, CustomUserChangeForm, YourModelForm
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_http_methods
 
@@ -357,8 +357,9 @@ def likePost(request, post_id):
 @login_required()
 def htmxPlay(request):
     form = CustomUserCreationForm()
+    emoji_form = YourModelForm()
     posts = request.user.posts.all()
-    context = {'form': form, 'posts': posts}
+    context = {'form': form, 'posts': posts, 'emoji_form': emoji_form}
     return render(request, 'postitApp/HTMX/htmx_play.html', context)
 
 
@@ -466,5 +467,13 @@ def updateLikesDisplayed(request, post_id):
     t_dict = {post: likesQuery(request, post)}
     context = {'lq': t_dict, 'post': post}
     return render(request, 'postitApp/HTMX/Partials/likes_count.html', context)
+
+
+def getCommentsForPost(request, post_id):
+    post = UserPost.objects.get(id=post_id)
+    comments = post.comments.all()
+    context = {'comments': comments}
+    return render(request, 'postitApp/HTMX/Partials/post_comments.html', context)
+
 
 """ ***************************** """

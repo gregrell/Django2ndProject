@@ -471,7 +471,7 @@ def updateLikesDisplayed(request, post_id):
 
 def getCommentsForPost(request, post_id):
     post = UserPost.objects.get(id=post_id)
-    comments = post.comments.all()
+    comments = post.comments.all().order_by('-created')
     context = {'comments': comments}
     return render(request, 'postitApp/HTMX/Partials/post_comments.html', context)
 

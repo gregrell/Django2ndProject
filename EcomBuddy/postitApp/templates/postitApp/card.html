@@ -111,6 +111,8 @@
 
 
       <a href="{% url 'delete-post' post.id %}" class="nav-link text-muted"><small>delete</small></a>
+      <small class="text-muted">{{post.publish_date|timesince}} ago</small>
+
     </div>
   </div>
 

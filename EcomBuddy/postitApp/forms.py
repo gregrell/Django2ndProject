@@ -40,9 +40,5 @@ class CustomUserChangeForm(UserChangeForm):
         fields = ['avatar', 'bio']
 
 
-class YourModelForm(forms.ModelForm):
-    comment = forms.CharField(widget=EmojiPickerTextareaAdmin)
-
-    class Meta:
-        model = Comment
-        fields = ['comment']
+class YourModelForm(forms.Form):
+    comment = forms.CharField(label='the comment', max_length=10)

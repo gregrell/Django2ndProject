@@ -477,3 +477,14 @@ def getCommentsForPost(request, post_id):
 
 
 """ ***************************** """
+
+"""******** ALPINE JS PLAYGROUND *****************"""
+
+
+@login_required()
+def alpinePlay(request):
+    context = {}
+    return render(request, 'postitApp/Alpine/Alpine_Play.html', context)
+
+
+"""**********END ALPINE JS PLAYGROUND **************"""

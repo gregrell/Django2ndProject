@@ -40,4 +40,9 @@ htmxpatterns = [
 
 ]
 
+alpinepatterns = [
+    path('alpineplay/', views.alpinePlay, name='alpineplay')
+]
+
 urlpatterns += htmxpatterns
+urlpatterns += alpinepatterns
